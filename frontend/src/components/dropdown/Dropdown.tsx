@@ -9,16 +9,12 @@ const Dropdown = () => {
 
   useEffect(() => {
     function handleClickOutsideDropdown(event: MouseEvent) {
-      console.log("Click detected:", event.target);
       if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        console.log("Clicked outside! Closing dropdown.");
         setIsDropdownOpen(false);
       }
     }
 
-    if (isDropdownOpen) {
-      document.addEventListener("click", handleClickOutsideDropdown);
-    }
+    document.addEventListener("click", handleClickOutsideDropdown);
 
     return () => {
       document.removeEventListener("click", handleClickOutsideDropdown);

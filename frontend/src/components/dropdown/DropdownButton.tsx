@@ -8,13 +8,13 @@ const DropdownButton = ({
   isDropdownOpen: boolean;
   setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  function toggleDropdown() {
+  function toggleDropdown(event: any) {
+    event.stopPropagation();
     setIsDropdownOpen((isOpen: boolean) => !isOpen);
   }
 
   return (
     <div className={`dropdown-button ${isDropdownOpen ? "dropdown-button-open" : ""}`} onClick={toggleDropdown}>
-      {/* Button */}
       <span className="toggle-icon">{isDropdownOpen ? <FaChevronUp /> : <FaChevronDown />}</span>
     </div>
   );
