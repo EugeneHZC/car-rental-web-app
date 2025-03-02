@@ -1,0 +1,253 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: large;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+fieldset {
+  border-radius: 10px;
+  border: 2px solid gray;
+}
+
+legend {
+  text-align: center;
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+label {
+  font-weight: 500;
+}
+
+input,
+textarea,
+select {
+  width: 300px;
+  min-height: 30px;
+  grid-column: span 2;
+  border-radius: 10px;
+  border: 2px solid #c6c6c6;
+  padding: 5px 10px;
+  font-size: medium;
+  transition: border 0.3s ease-in-out;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+}
+
+textarea {
+  resize: none;
+}
+
+select:hover {
+  cursor: pointer;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border: 3px solid #a1a1a1;
+  outline: none;
+  transition: 0.3s;
+}
+
+form {
+  margin: 50px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-form {
+  margin: 0 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 10px;
+}
+
+.input-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+  min-height: 50px;
+  min-width: 150px;
+}
+
+@media screen and (max-width: 600px) {
+  .input-section {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 5px;
+  }
+
+  .input-section label {
+    padding: 0 10px;
+  }
+}
+
+button {
+  border-radius: 10px;
+  font-size: large;
+  cursor: pointer;
+  color: white;
+  padding: 10px;
+  transition: 0.3s;
+  border: 3px solid;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.btn-normal {
+  background-color: #007bff;
+  border-color: #0056b3;
+  transition: 0.3s;
+}
+
+.btn-disabled {
+  background-color: #d6d6d6;
+  border-color: #c0c0c0;
+  color: #a0a0a0;
+  transition: 0.3s;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #b52a37;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #9e1f2b;
+}
+
+.btn-gray {
+  background-color: #6c757d;
+  border-color: #545b62;
+}
+
+.btn-gray:hover {
+  background-color: #545b62;
+}
+
+.btn-normal:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transition: 0.3s;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.radio-option input {
+  margin: 0;
+  width: 20px;
+}
+
+.radio-option label {
+  font-weight: normal;
+}
+
+.modal-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 30px;
+  padding: 0 30px 10px;
+}
+
+/* NAVBAR */
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid black;
+  padding: 10px 50px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.nav-app-name {
+  font-size: xx-large;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+}
+
+.nav-links {
+  min-width: 100px;
+  display: flex;
+  gap: 20px;
+}
+
+@media screen and (max-width: 400px) {
+  .nav-container {
+    padding: 10px 20px;
+  }
+
+  .nav-app-name {
+    font-size: 23px;
+    gap: 10px;
+  }
+
+  .nav-links {
+    font-size: 13px;
+    gap: 13px;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 600px) {
+  .nav-container {
+    padding: 10px 20px;
+  }
+
+  .nav-app-name {
+    font-size: 30px;
+    gap: 10px;
+  }
+
+  .nav-links {
+    font-size: 15px;
+    gap: 13px;
+  }
+}
+
+.nav-link {
+  text-decoration: none;
+  color: black;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}

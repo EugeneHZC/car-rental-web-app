@@ -1,0 +1,205 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCustomerContext } from "../hooks/useCustomerContext";
+import { useEffect, useState } from "react";
+import { createRental, getRentalByNRICAndCarPlate, updateRentalPaymentStatus } from "../api/rental";
+import { createPayment, getPaymentByRentalId, updatePayment } from "../api/payment";
+import { useAuthContext } from "../hooks/useAuthContext";
+
+const Payment = () => {
+  const [amountPaid, setAmountPaid] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("default");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { car, branch, pickUpTime, dropOffTime, totalPrice, rentalId } = location.state;
+  const { customer } = useCustomerContext();
+  const { user } = useAuthContext();
+
+  async function handleMakeRentAndPayment(
+    paymentDate: string | null,
+    paymentStatus: "Paid" | "Not Paid",
+    paymentMethod: string,
+    amountPaid: number
+  ) {
+    if (!customer) return;
+
+    try {
+      const { response: rentalResponse } = await createRental({
+        RentalID: 0,
+        RentalDate: "",
+        PickUpTime: pickUpTime,
+        DropOffTime: dropOffTime,
+        TotalPrice: totalPrice,
+        PaymentStatus: paymentStatus,
+        CarPlateNo: car.CarPlateNo,
+        NRIC: customer.NRIC,
+      });
+
+      const { json } = await getRentalByNRICAndCarPlate(customer.NRIC, car.CarPlateNo);
+
+      const { response: paymentResponse } = await createPayment(
+        paymentDate,
+        paymentMethod,
+        amountPaid,
+        json[0].RentalID
+      );
+
+      if (rentalResponse.ok && paymentResponse.ok) {
+        navigate("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!customer) return;
+
+    if (amountPaid < totalPrice) return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
+
+    if (paymentMethod === "default") return alert("Please choose a payment method.");
+
+    const currentDateUTC = new Date();
+
+    const currentDate = new Date(currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * (60 * 1000))
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 19);
+
+    try {
+      if (rentalId) {
+        const { json: existingPayment } = await getPaymentByRentalId(rentalId);
+
+        if (existingPayment.length !== 0) {
+          const { response: paymentResponse } = await updatePayment(
+            existingPayment[0].PaymentID,
+            currentDate,
+            paymentMethod,
+            amountPaid
+          );
+
+          const { response: rentalResponse } = await updateRentalPaymentStatus(rentalId, "Paid");
+
+          if (paymentResponse.ok && rentalResponse.ok) {
+            alert("Payment successful!");
+            return navigate("/profile");
+          }
+        }
+      }
+
+      handleMakeRentAndPayment(currentDate, "Paid", paymentMethod, amountPaid);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function handlePayLaterClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+
+    if (rentalId) {
+      const { json: existingPayment } = await getPaymentByRentalId(rentalId);
+
+      if (existingPayment.length !== 0) return navigate("/profile");
+    }
+
+    handleMakeRentAndPayment("", "Not Paid", "", 0);
+  }
+
+  useEffect(() => {
+    if (!user) navigate("/login");
+    if (!customer) navigate("/");
+  }, [user, customer]);
+
+  return (
+    <form className="payment-form" onSubmit={handleSubmit}>
+      <fieldset>
+        <legend>Payment</legend>
+
+        <div className="payment-container">
+          <div className="car-details-container">
+            <div className="car-infos">
+              <h3 className="car-model">{car.Model}</h3>
+              <div className="car-info">
+                <p>Car Plate: </p>
+                <p>{car.CarPlateNo}</p>
+              </div>
+              <div className="car-info">
+                <p>Colour: </p>
+                <p>{car.Colour}</p>
+              </div>
+              <div className="car-info">
+                <p>Price Per Day: RM </p>
+                <p>{car.PricePerDay}</p>
+              </div>
+              <div className="car-info">
+                <p>Branch: </p>
+                <p>{branch.Address}</p>
+              </div>
+              <div className="car-info">
+                <p>Pick Up Time: </p>
+                <p>{pickUpTime}</p>
+              </div>
+              <div className="car-info">
+                <p>Drop Off Time: </p>
+                <p>{dropOffTime}</p>
+              </div>
+              <div className="car-info">
+                <p>Total Price: RM </p>
+                <p>{totalPrice}</p>
+              </div>
+            </div>
+
+            <div className="form-container">
+              <div className="input-section">
+                <label htmlFor="amount">Payment Amount</label>
+                <input
+                  type="number"
+                  name="amount"
+                  required
+                  value={amountPaid}
+                  onChange={(e) => {
+                    const amountValue = parseFloat(e.target.value);
+
+                    if (!isNaN(amountValue)) {
+                      setAmountPaid(amountValue);
+                    }
+                  }}
+                />
+              </div>
+              <div className="input-section">
+                <label htmlFor="payment-method">Payment Method</label>
+                <select
+                  name="payment-method"
+                  id="payment-method-dropdown"
+                  required
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <option value="default" disabled>
+                    --Choose a payment method--
+                  </option>
+                  <option value="Visa Credit">Visa Credit</option>
+                  <option value="Visa Debit">Visa Debit</option>
+                </select>
+              </div>
+
+              <div className="buttons">
+                <button className="btn-normal" type="submit">
+                  Pay
+                </button>
+                <button className="btn-gray" type="button" onClick={handlePayLaterClicked}>
+                  Pay Later
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  );
+};
+
+export default Payment;

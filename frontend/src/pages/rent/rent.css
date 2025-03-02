@@ -1,0 +1,23 @@
+/* RENT PAGE */
+.rent-form {
+  margin: 20px 50px;
+  max-width: 1000px;
+}
+
+.car-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 10px 10px;
+}
+
+.car-details-container .car-infos {
+  padding-bottom: 30px;
+  border-bottom: 3px solid black;
+}
+
+@media screen and (min-width: 1200px) {
+  .rent-form {
+    margin: 0 auto;
+  }
+}
