@@ -25,7 +25,7 @@ export function getPaymentByRentalId(req: Request, res: Response) {
   db.query(query, (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
-    res.status(201).json(data);
+    res.status(201).json(data[0]);
   });
 }
 

@@ -26,7 +26,7 @@ export async function getPaymentByRentalId(rentalId: number) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/payments/payment/${rentalId}`);
   const json = await response.json();
 
-  return { json };
+  return { response, json };
 }
 
 export async function updatePayment(paymentId: number, paymentDate: string, paymentMethod: string, amountPaid: number) {

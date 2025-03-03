@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { Branch, Car, Customer, Rental } from "../../types";
+import { Branch, Car, Customer, Payment, Rental } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { getCarByCarPlate } from "../../api/car";
 import { getBranchByBranchNo } from "../../api/branch";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./display-card.css";
 import { getCustomerByNRIC } from "../../api/customer";
+import { getPaymentByRentalId } from "../../api/payment";
 
 const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
   const [car, setCar] = useState<Car>();
   const [branch, setBranch] = useState<Branch>();
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
+  const [payment, setPayment] = useState<Payment | null>(null);
 
   const { user } = useAuthContext();
 
@@ -36,6 +38,16 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
     .toISOString()
     .replace("T", " ")
     .slice(0, 16);
+
+  const formattedPaymentDate =
+    payment?.PaymentDate == null
+      ? ""
+      : new Date(
+          new Date(payment.PaymentDate).getTime() - new Date(payment.PaymentDate).getTimezoneOffset() * (60 * 1000)
+        )
+          .toISOString()
+          .replace("T", " ")
+          .slice(0, 19);
 
   function handleClick() {
     navigate("/payment", {
@@ -76,6 +88,18 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
     }
   }
 
+  async function fetchPaymentData() {
+    try {
+      const { response, json } = await getPaymentByRentalId(rental.RentalID);
+
+      if (response.ok && json) {
+        setPayment(json);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async function fetchCustomerData() {
     try {
       const { json: customerData } = await getCustomerByNRIC(rental.NRIC);
@@ -91,10 +115,12 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
   useEffect(() => {
     fetchCarData();
     fetchCustomerData();
+    fetchPaymentData();
   }, []);
 
   useEffect(() => {
     fetchBranchData();
+    console.log(payment);
   }, [car]);
 
   return (
@@ -148,6 +174,10 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
         <div className="rental-info">
           <p className="rental-info-title">Payment Status: </p>
           <p className="rental-info-content">{rental.PaymentStatus}</p>
+        </div>
+        <div className="rental-info">
+          <p className="rental-info-title">Payment Date: </p>
+          <p className="rental-info-content">{formattedPaymentDate}</p>
         </div>
       </div>
 

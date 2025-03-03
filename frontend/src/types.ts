@@ -49,3 +49,11 @@ export type Staff = {
   UserID: number;
   BranchNo: string;
 };
+
+export type Payment = {
+  PaymentID: number;
+  PaymentDate: string;
+  PaymentMethod: string;
+  AmountPaid: number;
+  RentalID: number;
+};

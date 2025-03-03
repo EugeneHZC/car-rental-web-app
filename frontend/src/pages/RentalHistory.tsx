@@ -27,7 +27,7 @@ const RentalHistory = () => {
   return (
     <div className="cards">
       {rentals.map((rental) => (
-        <RentalDisplayCard rental={rental} />
+        <RentalDisplayCard key={rental.RentalID} rental={rental} />
       ))}
     </div>
   );
