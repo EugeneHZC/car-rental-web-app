@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Branch, Car } from "../../types";
 import { updateCar } from "../../api/car";
+import "./modal.css";
 
 const EditCarModal = ({
   setOpenedModal,

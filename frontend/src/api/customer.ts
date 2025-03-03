@@ -41,3 +41,10 @@ export async function updateCustomerInfo(customer: Customer) {
 
   return { response, json };
 }
+
+export async function getCustomerByNRIC(nric: string) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/customers/customer/nric/${nric}`);
+  const json = await response.json();
+
+  return { response, json };
+}

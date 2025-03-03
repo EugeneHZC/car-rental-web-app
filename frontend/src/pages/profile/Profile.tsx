@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import "./profile.css";
-import RentalDisplayCard from "../../components/RentalDisplayCard";
+import RentalDisplayCard from "../../components/display-cards/RentalDisplayCard";
 import { useCustomerContext } from "../../hooks/useCustomerContext";
 import { Branch, Rental } from "../../types";
 import { getAllRentals, getRentalsByNRIC } from "../../api/rental";

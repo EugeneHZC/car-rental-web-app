@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { useCustomerContext } from "../hooks/useCustomerContext";
-import Dropdown from "./dropdown/Dropdown";
-import { links } from "../constantLinks";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { useCustomerContext } from "../../hooks/useCustomerContext";
+import Dropdown from "../dropdown/Dropdown";
+import { links } from "../../constantLinks";
 import { useEffect, useState } from "react";
+import "./navbar.css";
 
 const SMALL_SCREEN_SIZE = 700;
 

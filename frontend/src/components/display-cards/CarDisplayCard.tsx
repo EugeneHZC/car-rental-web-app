@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Branch, Car } from "../types";
+import { Branch, Car } from "../../types";
 import { useNavigate } from "react-router-dom";
-import { getBranchByBranchNo } from "../api/branch";
-import { useAuthContext } from "../hooks/useAuthContext";
-import ConfirmationModal from "./modal/ConfirmationModal";
-import EditCarModal from "./modal/EditCarModal";
+import { getBranchByBranchNo } from "../../api/branch";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import ConfirmationModal from "../modal/ConfirmationModal";
+import EditCarModal from "../modal/EditCarModal";
+import "./display-card.css";
 
 const CarDisplayCard = ({
   car,

@@ -24,13 +24,13 @@ export async function createRental(rental: Rental) {
 export async function getAllRentals() {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/rentals/`);
   const json = await response.json();
-  return { json };
+  return { response, json };
 }
 
 export async function getRentalByNRICAndCarPlate(nric: string, carPlateNo: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/rentals/nric/${nric}/carPlateNo/${carPlateNo}`);
   const json = await response.json();
-  return { json };
+  return { response, json };
 }
 
 export async function getRentalsByNRIC(nric: string) {

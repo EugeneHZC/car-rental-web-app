@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CarDisplayCard from "../../components/CarDisplayCard";
+import CarDisplayCard from "../../components/display-cards/CarDisplayCard";
 import { Branch, Car, Rental } from "../../types";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";

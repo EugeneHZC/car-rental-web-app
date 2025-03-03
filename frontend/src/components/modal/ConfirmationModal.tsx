@@ -1,4 +1,5 @@
 import { removeCar } from "../../api/car";
+import "./modal.css";
 
 const ConfirmationModal = ({
   setOpenedModal,

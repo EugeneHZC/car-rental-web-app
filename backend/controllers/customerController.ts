@@ -30,6 +30,17 @@ export function getCustomerByUserID(req: Request, res: Response) {
   });
 }
 
+export function getCustomerByNRIC(req: Request, res: Response) {
+  const query = `SELECT * FROM CUSTOMER WHERE NRIC = '${req.params.nric}'`;
+
+  db.query(query, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("No customer found!");
+
+    res.status(200).json(data[0]);
+  });
+}
+
 export function updateCustomerInfo(req: Request, res: Response) {
   const selectQuery = `SELECT * FROM CUSTOMER WHERE UserID = ${req.body.UserID}`;
 

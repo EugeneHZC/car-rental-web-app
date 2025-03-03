@@ -1,0 +1,46 @@
+.card-container {
+  padding: 0 20px 20px;
+  border: 2px solid black;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (max-width: 900px) {
+  .card-container {
+    gap: 30px;
+  }
+}
+
+.car-infos,
+.rental-infos {
+  display: flex;
+  flex-direction: column;
+}
+
+.car-info,
+.rental-info {
+  color: gray;
+  font-weight: 500;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: fit-content;
+  max-height: 60px;
+  align-items: center;
+}
+
+.car-info p,
+.rental-info p {
+  margin: 10px;
+}
+
+.car-info-title,
+.rental-info-title {
+  font-weight: bold;
+}
+
+.car-model {
+  height: 20px;
+  font-size: x-large;
+}
