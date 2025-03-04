@@ -19,12 +19,12 @@ const Dropdown = () => {
     return () => {
       document.removeEventListener("click", handleClickOutsideDropdown);
     };
-  }, [isDropdownOpen]);
+  }, [dropdownRef]);
 
   return (
     <div className="dropdown" ref={dropdownRef}>
       <DropdownButton isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} />
-      <DropdownContent isDropdownOpen={isDropdownOpen} />
+      <DropdownContent isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} />
     </div>
   );
 };

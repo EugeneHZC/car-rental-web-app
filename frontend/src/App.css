@@ -3,6 +3,7 @@ body {
   padding: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: large;
+  height: 100vh;
 }
 
 body::-webkit-scrollbar {
@@ -163,4 +164,10 @@ button {
 
 .radio-option label {
   font-weight: normal;
+}
+
+.break-line {
+  height: 2px;
+  background-color: #888888;
+  margin: 10px 0;
 }

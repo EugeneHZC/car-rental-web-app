@@ -11,6 +11,8 @@ import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
 import { getBranchByBranchNo } from "../../api/branch";
 
+const SMALL_SCREEN_SIZE = 700;
+
 const Profile = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [openedModal, setOpenedModal] = useState<"edit-profile" | "change-password" | "">("");
@@ -19,11 +21,17 @@ const Profile = () => {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  const [isScreenSmall, setIsScreenSmall] = useState(window.innerWidth < SMALL_SCREEN_SIZE);
+
   const { user } = useAuthContext();
   const { customer } = useCustomerContext();
   const { staff } = useStaffContext();
 
   const navigate = useNavigate();
+
+  function handleResize() {
+    setIsScreenSmall(window.innerWidth < SMALL_SCREEN_SIZE);
+  }
 
   function handleRegisterCustomerClicked() {
     navigate("/register-customer");
@@ -68,6 +76,10 @@ const Profile = () => {
 
     // generates the current time to filter out past rents made
     setCurrentTime(new Date());
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, [user, customer]);
 
   return (
@@ -138,6 +150,9 @@ const Profile = () => {
           </button>
         </div>
       </div>
+
+      {isScreenSmall && <div className="break-line" />}
+
       <div className="rents-made">
         <h3 className="title">Rents Made {user?.role === "Staff" && "By Customers"}</h3>
         <div className="cards">

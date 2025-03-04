@@ -120,7 +120,6 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
 
   useEffect(() => {
     fetchBranchData();
-    console.log(payment);
   }, [car]);
 
   return (
@@ -143,6 +142,9 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
           <p className="rental-info-title">Branch Address: </p>
           <p className="rental-info-content">{branch?.Address}</p>
         </div>
+
+        <div className="break-line" />
+
         {user?.role === "Staff" && (
           <>
             <div className="rental-info">
@@ -155,6 +157,9 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
             </div>
           </>
         )}
+
+        <div className="break-line" />
+
         <div className="rental-info">
           <p className="rental-info-title">Rental Date: </p>
           <p className="rental-info-content">{formattedRentalDate}</p>
@@ -167,6 +172,9 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
           <p className="rental-info-title">Drop Off Time: </p>
           <p className="rental-info-content">{formattedDropOffTime}</p>
         </div>
+
+        <div className="break-line" />
+
         <div className="rental-info">
           <p className="rental-info-title">Total Price:</p>
           <p className="rental-info-content">RM {rental.TotalPrice}</p>
