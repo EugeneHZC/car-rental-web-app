@@ -59,11 +59,7 @@ const Register = () => {
           BranchNo: branchNo,
         };
 
-        console.log(newStaff);
-
         const { response, json: message } = await createStaff(newStaff);
-
-        console.log(message);
 
         if (!response.ok) return;
       }
