@@ -4,9 +4,9 @@ import { Branch, Car, Rental } from "../../types";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
-import { getAllCars } from "../../api/car";
-import { getAllBranches } from "../../api/branch";
-import { getAllRentals } from "../../api/rental";
+import { getAllCars } from "../../car";
+import { getAllBranches } from "../../branch";
+import { getAllRentals } from "../../rental";
 import SearchBar from "../../components/search-bar/SearchBar";
 
 const Home = () => {

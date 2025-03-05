@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Branch, Car, Customer, Payment, Rental } from "../../types";
 import { useNavigate } from "react-router-dom";
-import { getCarByCarPlate } from "../../api/car";
-import { getBranchByBranchNo } from "../../api/branch";
+import { getCarByCarPlate } from "../../car";
+import { getBranchByBranchNo } from "../../branch";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./display-card.css";
-import { getCustomerByNRIC } from "../../api/customer";
-import { getPaymentByRentalId } from "../../api/payment";
+import { getCustomerByNRIC } from "../../customer";
+import { getPaymentByRentalId } from "../../payment";
 
 const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBranchNo: string | null }) => {
   const [car, setCar] = useState<Car>();

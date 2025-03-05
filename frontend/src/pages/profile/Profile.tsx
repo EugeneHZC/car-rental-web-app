@@ -5,11 +5,11 @@ import "./profile.css";
 import RentalDisplayCard from "../../components/display-cards/RentalDisplayCard";
 import { useCustomerContext } from "../../hooks/useCustomerContext";
 import { Branch, Rental } from "../../types";
-import { getAllRentals, getRentalsByNRIC } from "../../api/rental";
+import { getAllRentals, getRentalsByNRIC } from "../../rental";
 import EditProfileModal from "../../components/modal/EditProfileModal";
 import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
-import { getBranchByBranchNo } from "../../api/branch";
+import { getBranchByBranchNo } from "../../branch";
 
 const SMALL_SCREEN_SIZE = 700;
 

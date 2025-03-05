@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { Staff } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { getStaffByUserId } from "../api/staff";
+import { getStaffByUserId } from "../staff";
 
 type Action = {
   payload: Staff | null;

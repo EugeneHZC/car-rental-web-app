@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Branch, Car, Rental } from "../../types";
 import { useEffect, useState } from "react";
 import "./rent.css";
-import { getRentalsByCarPlate } from "../../api/rental";
+import { getRentalsByCarPlate } from "../../rental";
 import { useCustomerContext } from "../../hooks/useCustomerContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 

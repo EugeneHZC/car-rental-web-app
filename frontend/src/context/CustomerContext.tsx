@@ -1,7 +1,7 @@
 import { createContext, Dispatch, ReactNode, useEffect, useState } from "react";
 import { Customer } from "../types";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { getCustomerByUserId } from "../api/customer";
+import { getCustomerByUserId } from "../customer";
 
 type CustomerAction = {
   payload: Customer | null;

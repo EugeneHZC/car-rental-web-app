@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { login, register } from "../../api/auth";
+import { login, register } from "../../auth";
 import { Branch, Staff } from "../../types";
-import { getAllBranches } from "../../api/branch";
-import { createStaff } from "../../api/staff";
+import { getAllBranches } from "../../branch";
+import { createStaff } from "../../staff";
 
 const Register = () => {
   const [name, setName] = useState("");

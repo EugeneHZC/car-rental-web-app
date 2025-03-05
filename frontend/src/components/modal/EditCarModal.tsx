@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Branch, Car } from "../../types";
-import { updateCar } from "../../api/car";
+import { updateCar } from "../../car";
 import "./modal.css";
 
 const EditCarModal = ({
