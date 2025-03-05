@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { updateUserInfo } from "../../auth";
+import { updateUserInfo } from "../../api/auth";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useCustomerContext } from "../../hooks/useCustomerContext";
 import { useStaffContext } from "../../hooks/useStaffContext";
 import { Branch, Customer, Staff } from "../../types";
-import { getAllBranches } from "../../branch";
-import { updateCustomerInfo } from "../../customer";
-import { updateStaffInfo } from "../../staff";
+import { getAllBranches } from "../../api/branch";
+import { updateCustomerInfo } from "../../api/customer";
+import { updateStaffInfo } from "../../api/staff";
 import "./modal.css";
 
 const EditProfileModal = ({

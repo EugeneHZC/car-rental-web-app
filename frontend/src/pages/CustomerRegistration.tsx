@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { useCustomerContext } from "../hooks/useCustomerContext";
-import { createCustomer } from "../customer";
+import { createCustomer } from "../api/customer";
 
 const CustomerRegistration = () => {
   const { user } = useAuthContext();

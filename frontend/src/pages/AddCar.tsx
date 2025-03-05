@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import { addCar } from "../car";
+import { addCar } from "../api/car";
 import { Branch, Car } from "../types";
-import { getAllBranches } from "../branch";
+import { getAllBranches } from "../api/branch";
 
 const AddCar = () => {
   const [carPlateNo, setCarPlateNo] = useState("");

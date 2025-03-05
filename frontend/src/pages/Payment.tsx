@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCustomerContext } from "../hooks/useCustomerContext";
 import { useEffect, useState } from "react";
-import { createRental, getRentalByNRICAndCarPlate, updateRentalPaymentStatus } from "../rental";
-import { createPayment, getPaymentByRentalId, updatePayment } from "../payment";
+import { createRental, getRentalByNRICAndCarPlate, updateRentalPaymentStatus } from "../api/rental";
+import { createPayment, getPaymentByRentalId, updatePayment } from "../api/payment";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 const Payment = () => {

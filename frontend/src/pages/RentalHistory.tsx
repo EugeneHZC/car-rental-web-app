@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { Rental } from "../types";
-import { getAllRentals } from "../rental";
+import { getAllRentals } from "../api/rental";
 import RentalDisplayCard from "../components/display-cards/RentalDisplayCard";
 import { useStaffContext } from "../hooks/useStaffContext";
 

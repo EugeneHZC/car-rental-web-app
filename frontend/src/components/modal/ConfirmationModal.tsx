@@ -1,4 +1,4 @@
-import { removeCar } from "../../car";
+import { removeCar } from "../../api/car";
 import "./modal.css";
 
 const ConfirmationModal = ({
