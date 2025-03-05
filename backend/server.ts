@@ -13,17 +13,18 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
+    origin: ["http://localhost:5173", "http://192.168.1.16:5173"],
     credentials: true,
   })
 );
 
-app.use("/auth", userRouter);
-app.use("/cars", carRouter);
-app.use("/branches", branchRouter);
-app.use("/rentals", rentalRouter);
-app.use("/customers", customerRouter);
-app.use("/payments", paymentRouter);
-app.use("/staff", staffRouter);
+app.use("/api/auth", userRouter);
+app.use("/api/cars", carRouter);
+app.use("/api/branches", branchRouter);
+app.use("/api/rentals", rentalRouter);
+app.use("/api/customers", customerRouter);
+app.use("/api/payments", paymentRouter);
+app.use("/api/staff", staffRouter);
 
 app.listen(8080, () => {
   console.log("Listening on port 8080...");
