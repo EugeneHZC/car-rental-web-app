@@ -7,7 +7,7 @@ import "./home.css";
 import { getAllCars } from "../../api/car";
 import { getAllBranches } from "../../api/branch";
 import { getAllRentals } from "../../api/rental";
-import SearchBar from "../../components/SearchBar";
+import SearchBar from "../../components/search-bar/SearchBar";
 
 const Home = () => {
   const [searchDesc, setSearchDesc] = useState("");

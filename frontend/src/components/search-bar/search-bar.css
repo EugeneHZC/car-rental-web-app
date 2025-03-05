@@ -1,0 +1,31 @@
+/* SEARCH BAR */
+.search-bar,
+.date-filter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+}
+
+.search-input {
+  min-height: 30px;
+  border-radius: 100px;
+  padding: 5px 15px;
+  font-size: medium;
+  border: 2px solid #c6c6c6;
+  transition: 0.3s;
+  margin: 0 10px;
+  width: 500px;
+}
+
+@media screen and (max-width: 700px) {
+  .search-input {
+    width: 200px;
+  }
+}
+
+.search-input:focus {
+  border: 3px solid #a1a1a1;
+  outline: none;
+  transition: 0.3s;
+}

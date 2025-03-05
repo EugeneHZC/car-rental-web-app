@@ -33,22 +33,20 @@ const Rent = () => {
     for (let i = 0; i < json.length; i++) {
       const currentCarRental: Rental = json[i];
 
-      const currentRentalPickUpTime = new Date(currentCarRental.PickUpTime);
-      const currentRentalDropOffTime = new Date(currentCarRental.DropOffTime);
+      const occupiedPickUpTime = new Date(currentCarRental.PickUpTime);
+      const occupiedDropOffTime = new Date(currentCarRental.DropOffTime);
 
       if (
-        (currentRentalPickUpTime.getTime() <= pickUpTime.getTime() &&
-          pickUpTime.getTime() <= currentRentalDropOffTime.getTime()) ||
-        (currentRentalPickUpTime.getTime() <= dropOffTime.getTime() &&
-          dropOffTime.getTime() <= currentRentalDropOffTime.getTime()) ||
-        (pickUpTime.getTime() <= currentRentalPickUpTime.getTime() &&
-          currentRentalPickUpTime.getTime() <= dropOffTime.getTime() &&
-          pickUpTime.getTime() <= currentRentalDropOffTime.getTime() &&
-          currentRentalDropOffTime.getTime() <= dropOffTime.getTime())
+        dropOffTime.getTime() >= occupiedPickUpTime.getTime() &&
+        pickUpTime.getTime() <= occupiedDropOffTime.getTime()
       ) {
         return alert("Oops! There is a crash in time for this car.");
       }
     }
+
+    // check if the chosen time is later than the current time
+    const currentTime = new Date();
+    if (pickUpTime.getTime() <= currentTime.getTime()) return alert("Pick up time must be later than current time.");
 
     const differenceInDays = Math.round((dropOffTime.getTime() - pickUpTime.getTime()) / (1000 * 60 * 60 * 24));
 

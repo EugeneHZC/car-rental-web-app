@@ -1,3 +1,5 @@
+import "./search-bar.css";
+
 const SearchBar = ({ searchDesc, setSearchDesc }: { searchDesc: string; setSearchDesc: React.Dispatch<string> }) => {
   return (
     <div className="search-bar">
