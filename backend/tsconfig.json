@@ -4,7 +4,8 @@
     "rootDir": "./",
     "module": "CommonJS",
     "target": "ES6",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
   "include": ["./**/*.ts"],
   "exclude": ["dist", "node_modules"]
