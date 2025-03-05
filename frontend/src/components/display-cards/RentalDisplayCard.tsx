@@ -8,7 +8,7 @@ import "./display-card.css";
 import { getCustomerByNRIC } from "../../api/customer";
 import { getPaymentByRentalId } from "../../api/payment";
 
-const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
+const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBranchNo: string | null }) => {
   const [car, setCar] = useState<Car>();
   const [branch, setBranch] = useState<Branch>();
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
@@ -122,6 +122,8 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
     fetchBranchData();
   }, [car]);
 
+  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
+
   return (
     <div className="card-container">
       <div className="rental-infos">
@@ -158,7 +160,7 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
           </>
         )}
 
-        <div className="break-line" />
+        {user?.role === "Staff" && <div className="break-line" />}
 
         <div className="rental-info">
           <p className="rental-info-title">Rental Date: </p>
@@ -183,10 +185,12 @@ const RentalDisplayCard = ({ rental }: { rental: Rental }) => {
           <p className="rental-info-title">Payment Status: </p>
           <p className="rental-info-content">{rental.PaymentStatus}</p>
         </div>
-        <div className="rental-info">
-          <p className="rental-info-title">Payment Date: </p>
-          <p className="rental-info-content">{formattedPaymentDate}</p>
-        </div>
+        {formattedPaymentDate && (
+          <div className="rental-info">
+            <p className="rental-info-title">Payment Date: </p>
+            <p className="rental-info-content">{formattedPaymentDate}</p>
+          </div>
+        )}
       </div>
 
       {rental.PaymentStatus === "Not Paid" && user?.role === "Customer" && (

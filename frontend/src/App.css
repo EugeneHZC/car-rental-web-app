@@ -11,6 +11,24 @@ body::-webkit-scrollbar {
   height: 0;
 }
 
+/* FORM */
+form {
+  margin: 50px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-form {
+  margin: 0 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 10px;
+}
+
 fieldset {
   border-radius: 10px;
   border: 2px solid gray;
@@ -26,6 +44,7 @@ label {
   font-weight: 500;
 }
 
+/* INPUT */
 input,
 textarea,
 select {
@@ -57,23 +76,6 @@ select:focus {
   transition: 0.3s;
 }
 
-form {
-  margin: 50px auto;
-  display: flex;
-  justify-content: center;
-}
-
-.modal-form {
-  margin: 0 20px;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px 10px;
-}
-
 .input-section {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -96,6 +98,22 @@ form {
   }
 }
 
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.radio-option input {
+  margin: 0;
+  width: 20px;
+}
+
+.radio-option label {
+  font-weight: normal;
+}
+
+/* BUTTON */
 button {
   border-radius: 10px;
   font-size: large;
@@ -151,23 +169,15 @@ button {
   transition: 0.3s;
 }
 
-.radio-option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.radio-option input {
-  margin: 0;
-  width: 20px;
-}
-
-.radio-option label {
-  font-weight: normal;
-}
-
 .break-line {
   height: 2px;
   background-color: #888888;
   margin: 10px 0;
+}
+
+.loading-message {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin-top: 50px;
 }

@@ -23,6 +23,8 @@ const Profile = () => {
 
   const [isScreenSmall, setIsScreenSmall] = useState(window.innerWidth < SMALL_SCREEN_SIZE);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { user } = useAuthContext();
   const { customer } = useCustomerContext();
   const { staff } = useStaffContext();
@@ -70,6 +72,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!user) navigate("/login");
+    if (rentals.length === 0) setIsLoading(true);
 
     setRentals([]);
     fetchData();
@@ -81,6 +84,10 @@ const Profile = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, [user, customer]);
+
+  useEffect(() => {
+    if (rentals.length) setIsLoading(false);
+  }, [rentals]);
 
   return (
     <div className="profile-container">
@@ -155,17 +162,23 @@ const Profile = () => {
 
       <div className="rents-made">
         <h3 className="title">Rents Made {user?.role === "Staff" && "By Customers"}</h3>
-        <div className="cards">
-          {rentals
-            .filter((rental) => {
-              // filter rents made where rental drop off time past the current time (meaning car is already returned)
-              const rentalDropOffTime = new Date(rental.DropOffTime);
-              return currentTime.getTime() <= rentalDropOffTime.getTime();
-            })
-            .map((rental) => (
-              <RentalDisplayCard rental={rental} key={rental.RentalID} />
-            ))}
-        </div>
+
+        {isLoading ? (
+          <p className="loading-message">Loading...</p>
+        ) : (
+          <div className="cards">
+            {rentals
+              .filter((rental) => {
+                // filter rents made where rental drop off time past the current time (meaning car is already returned)
+                const rentalDropOffTime = new Date(rental.DropOffTime);
+
+                return currentTime.getTime() <= rentalDropOffTime.getTime();
+              })
+              .map((rental) => (
+                <RentalDisplayCard rental={rental} key={rental.RentalID} staffBranchNo={staff?.BranchNo ?? ""} />
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );
