@@ -18,13 +18,13 @@ app.use(
   })
 );
 
-app.use("/api/auth", userRouter);
-app.use("/api/cars", carRouter);
-app.use("/api/branches", branchRouter);
-app.use("/api/rentals", rentalRouter);
-app.use("/api/customers", customerRouter);
-app.use("/api/payments", paymentRouter);
-app.use("/api/staff", staffRouter);
+app.use("/auth", userRouter);
+app.use("/cars", carRouter);
+app.use("/branches", branchRouter);
+app.use("/rentals", rentalRouter);
+app.use("/customers", customerRouter);
+app.use("/payments", paymentRouter);
+app.use("/staff", staffRouter);
 
 app.listen(8080, () => {
   console.log("Listening on port 8080...");
