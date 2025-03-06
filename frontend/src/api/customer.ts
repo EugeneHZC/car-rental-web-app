@@ -48,3 +48,12 @@ export async function getCustomerByNRIC(nric: string) {
 
   return { response, json };
 }
+
+export async function deleteCustomer(userId: number) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/customers/customer/delete/${userId}`, {
+    method: "DELETE",
+  });
+  const json = await response.json();
+
+  return { response, json };
+}

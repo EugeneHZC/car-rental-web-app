@@ -6,6 +6,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import EditCarModal from "../modal/EditCarModal";
 import "./display-card.css";
+import { removeCar } from "../../api/car";
 
 const CarDisplayCard = ({
   car,
@@ -29,6 +30,17 @@ const CarDisplayCard = ({
 
   function handleEditClicked() {
     setOpenedModal("edit-car-modal");
+  }
+
+  async function handleRemoveCar() {
+    const { response, json } = await removeCar(car.CarPlateNo);
+
+    if (response.ok) {
+      alert(json);
+      fetchCarCallback();
+    } else {
+      alert("Oops! Something went wrong.");
+    }
   }
 
   async function fetchData() {
@@ -56,8 +68,8 @@ const CarDisplayCard = ({
       {openedModal === "confirmation-modal" && (
         <ConfirmationModal
           setOpenedModal={setOpenedModal}
-          carPlateNo={car.CarPlateNo}
-          fetchCarCallback={fetchCarCallback}
+          handleCallback={handleRemoveCar}
+          content="Are you sure you want to remove this car?"
         />
       )}
       {openedModal === "edit-car-modal" && (

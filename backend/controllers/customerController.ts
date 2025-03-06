@@ -62,3 +62,20 @@ export function updateCustomerInfo(req: Request, res: Response) {
     });
   });
 }
+
+export function deleteCustomer(req: Request, res: Response) {
+  const selectQuery = `SELECT * FROM CUSTOMER WHERE UserID = ${req.params.userId}`;
+
+  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("No customer found!");
+
+    const deleteQuery = `DELETE FROM CUSTOMER WHERE UserID = ${req.params.userId}`;
+
+    db.query(deleteQuery, (err, _) => {
+      if (err) return res.status(500).json(err);
+
+      res.status(200).json("Customer deleted successfully!");
+    });
+  });
+}

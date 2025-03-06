@@ -33,3 +33,12 @@ export async function updateStaffInfo(staff: Staff) {
 
   return { response, json };
 }
+
+export async function deleteStaff(userId: number) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/staff/delete/${userId}`, {
+    method: "DELETE",
+  });
+  const json = await response.json();
+
+  return { response, json };
+}

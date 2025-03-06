@@ -57,3 +57,20 @@ export async function updateStaffInfo(req: Request, res: Response) {
     });
   });
 }
+
+export function deleteStaff(req: Request, res: Response) {
+  const selectQuery = `SELECT * FROM STAFF WHERE UserID = ${req.params.userId}`;
+
+  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("No staff found!");
+
+    const deleteQuery = `DELETE FROM STAFF WHERE UserID = ${req.params.userId}`;
+
+    db.query(deleteQuery, (err, _) => {
+      if (err) return res.status(500).json(err);
+
+      res.status(200).json("Staff deleted successfully!");
+    });
+  });
+}

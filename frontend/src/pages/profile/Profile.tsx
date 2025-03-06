@@ -10,12 +10,16 @@ import EditProfileModal from "../../components/modal/EditProfileModal";
 import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
 import { getBranchByBranchNo } from "../../api/branch";
+import ConfirmationModal from "../../components/modal/ConfirmationModal";
+import { deleteCustomer } from "../../api/customer";
+import { deleteUser } from "../../api/auth";
+import { deleteStaff } from "../../api/staff";
 
 const SMALL_SCREEN_SIZE = 700;
 
 const Profile = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
-  const [openedModal, setOpenedModal] = useState<"edit-profile" | "change-password" | "">("");
+  const [openedModal, setOpenedModal] = useState<string>("");
   // for staff only
   const [branch, setBranch] = useState<Branch | null>(null);
 
@@ -25,9 +29,9 @@ const Profile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const { user } = useAuthContext();
-  const { customer } = useCustomerContext();
-  const { staff } = useStaffContext();
+  const { user, dispatch: userDispatch } = useAuthContext();
+  const { customer, dispatch: customerDispatch } = useCustomerContext();
+  const { staff, dispatch: staffDispatch } = useStaffContext();
 
   const navigate = useNavigate();
 
@@ -45,6 +49,10 @@ const Profile = () => {
 
   function handleEditProfileClicked() {
     setOpenedModal("edit-profile");
+  }
+
+  function handleDeleteProfileClicked() {
+    setOpenedModal("delete-profile");
   }
 
   async function fetchData() {
@@ -66,12 +74,33 @@ const Profile = () => {
         if (rentalsResponse.ok && json.length) {
           setRentals(json);
         }
-
-        setIsLoading(false);
       }
+
+      setIsLoading(false);
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async function handleDeleteProfile() {
+    if (user?.role === "Customer") {
+      const { response: customerResponse } = await deleteCustomer(user?.id ?? 0);
+
+      if (!customerResponse.ok) return alert("Oops! Something went wrong.");
+      customerDispatch({ payload: null });
+    } else {
+      const { response: staffResponse } = await deleteStaff(user?.id ?? 0);
+
+      if (!staffResponse.ok) return alert("Oops! Something went wrong.");
+      staffDispatch({ payload: null });
+    }
+
+    const { response: userResponse } = await deleteUser(user?.id ?? 0);
+
+    if (!userResponse.ok) return alert("Oops! Something went wrong.");
+    alert("Profile deleted successfully");
+    userDispatch({ type: "LOGOUT", payload: null });
+    localStorage.removeItem(import.meta.env.VITE_LOCAL_STORAGE_KEY);
   }
 
   useEffect(() => {
@@ -94,6 +123,13 @@ const Profile = () => {
         <EditProfileModal setOpenedModal={setOpenedModal} currentStaffBranch={branch?.Address ?? ""} />
       )}
       {openedModal === "change-password" && <ChangePasswordModal setOpenedModal={setOpenedModal} />}
+      {openedModal === "delete-profile" && (
+        <ConfirmationModal
+          setOpenedModal={setOpenedModal}
+          handleCallback={handleDeleteProfile}
+          content="Are you sure you want to delete your profile?"
+        />
+      )}
 
       <div className="profile-details">
         <div className="profile-header">
@@ -153,6 +189,10 @@ const Profile = () => {
 
           <button className="btn-normal" type="button" onClick={handleChangePasswordClicked}>
             Change Password
+          </button>
+
+          <button className="btn-danger" type="button" onClick={handleDeleteProfileClicked}>
+            Delete Profile
           </button>
         </div>
       </div>
