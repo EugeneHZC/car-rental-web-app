@@ -30,13 +30,15 @@ const RentalHistory = () => {
   }, []);
 
   useEffect(() => {
-    if (rentals.length) setIsLoading(false);
+    setIsLoading(false);
   }, [rentals]);
 
   return (
     <>
       {isLoading ? (
         <p className="loading-message">Loading...</p>
+      ) : rentals.length === 0 ? (
+        <p className="loading-message">No rentals made yet...</p>
       ) : (
         <div className="cards">
           {rentals.map((rental) => (
