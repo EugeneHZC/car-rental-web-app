@@ -17,27 +17,29 @@ const Home = () => {
   const [dropOffDateFilter, setDropOffDateFilter] = useState("");
   const [rentals, setRentals] = useState<Rental[]>([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
   async function fetchData() {
     try {
-      const { json: carData } = await getAllCars();
-      if (carData.length > 0) {
+      const { response: carResponse, json: carData } = await getAllCars();
+      if (carResponse.ok && carData.length > 0) {
         setCars(carData);
-      } else {
-        setCars([]);
       }
 
-      const { json: branchData } = await getAllBranches();
-      if (branchData.length > 0) {
+      const { response: branchResponse, json: branchData } = await getAllBranches();
+      if (branchResponse.ok && branchData.length > 0) {
         setBranches(branchData);
       }
 
-      const { json: rentalData } = await getAllRentals();
-      if (rentalData.length > 0) {
+      const { response: rentalResponse, json: rentalData } = await getAllRentals();
+      if (rentalResponse.ok && rentalData.length > 0) {
         setRentals(rentalData);
       }
+
+      setIsLoading(false);
     } catch (e) {
       console.log(e);
     }
@@ -79,49 +81,56 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="cards">
-        {cars.length > 0 &&
-          cars
-            .filter((car) => {
-              const statusFilter = car.Status === "Good" && user?.role === "Customer";
+      {isLoading ? (
+        <p className="loading-message">Loading...</p>
+      ) : cars.length === 0 ? (
+        <p className="loading-message">No cars to display...</p>
+      ) : (
+        <div className="cards">
+          {cars.length > 0 &&
+            cars
+              .filter((car) => {
+                const statusFilter = car.Status === "Good" && user?.role === "Customer";
 
-              const modelFilter = car.Model.toLowerCase().includes(searchDesc.toLowerCase());
-              const colourFilter = car.Colour.toLowerCase().includes(searchDesc.toLowerCase());
-              const priceFilter = car.PricePerDay.toString().toLowerCase().includes(searchDesc);
-              const branchFilter = branches
-                .find((branch) => car.BranchNo === branch.BranchNo)
-                ?.Address.toLowerCase()
-                .includes(searchDesc.toLowerCase());
+                const modelFilter = car.Model.toLowerCase().includes(searchDesc.toLowerCase());
+                const colourFilter = car.Colour.toLowerCase().includes(searchDesc.toLowerCase());
+                const priceFilter = car.PricePerDay.toString().toLowerCase().includes(searchDesc);
+                const branchFilter = branches
+                  .find((branch) => car.BranchNo === branch.BranchNo)
+                  ?.Address.toLowerCase()
+                  .includes(searchDesc.toLowerCase());
 
-              // date filter
-              const pickUpDateTime = new Date(`${pickUpDateFilter} 00:00`).getTime();
-              const dropOffDateTime = new Date(`${dropOffDateFilter} 23:59`).getTime();
+                // date filter
+                const pickUpDateTime = new Date(`${pickUpDateFilter} 00:00`).getTime();
+                const dropOffDateTime = new Date(`${dropOffDateFilter} 23:59`).getTime();
 
-              // get the current car rentals
-              const carRentals = rentals.filter((rental) => rental.CarPlateNo === car.CarPlateNo);
-              // filter out to see whether each rental pick up date and drop off date overlaps with the filter input by user
-              // if one of the dates overlapped, dateFilter will be false
-              const dateFilter = carRentals.every((rental) => {
-                const currentPickUpDateTime = new Date(rental?.PickUpTime ?? "").getTime();
-                const currentDropOffDateTime = new Date(rental?.DropOffTime ?? "").getTime();
-                return currentPickUpDateTime > dropOffDateTime || currentDropOffDateTime < pickUpDateTime;
-              });
+                // get the current car rentals
+                const carRentals = rentals.filter((rental) => rental.CarPlateNo === car.CarPlateNo);
+                // filter out to see whether each rental pick up date and drop off date overlaps with the filter input by user
+                // if one of the dates overlapped, dateFilter will be false
+                const dateFilter = carRentals.every((rental) => {
+                  const currentPickUpDateTime = new Date(rental?.PickUpTime ?? "").getTime();
+                  const currentDropOffDateTime = new Date(rental?.DropOffTime ?? "").getTime();
+                  return currentPickUpDateTime > dropOffDateTime || currentDropOffDateTime < pickUpDateTime;
+                });
 
-              if (pickUpDateFilter !== "" && dropOffDateFilter !== "" && carRentals.length)
+                if (pickUpDateFilter !== "" && dropOffDateFilter !== "" && carRentals.length)
+                  return (
+                    (modelFilter || colourFilter || priceFilter || branchFilter) &&
+                    dateFilter &&
+                    (statusFilter || user?.role === "Staff")
+                  );
+
                 return (
                   (modelFilter || colourFilter || priceFilter || branchFilter) &&
-                  dateFilter &&
                   (statusFilter || user?.role === "Staff")
                 );
-
-              return (
-                (modelFilter || colourFilter || priceFilter || branchFilter) && (statusFilter || user?.role === "Staff")
-              );
-            })
-            .map((car) => (
-              <CarDisplayCard key={car.CarPlateNo} car={car} fetchCarCallback={fetchData} branches={branches} />
-            ))}
-      </div>
+              })
+              .map((car) => (
+                <CarDisplayCard key={car.CarPlateNo} car={car} fetchCarCallback={fetchData} branches={branches} />
+              ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -65,8 +65,9 @@ const Profile = () => {
         const { response: rentalsResponse, json } = await getAllRentals();
         if (rentalsResponse.ok && json.length) {
           setRentals(json);
-          setIsLoading(false);
         }
+
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);

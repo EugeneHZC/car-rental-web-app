@@ -4,14 +4,14 @@ export async function getAllCars() {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/`);
   const json = await response.json();
 
-  return { json };
+  return { response, json };
 }
 
 export async function getCarByCarPlate(carPlateNo: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${carPlateNo}`);
   const json = await response.json();
 
-  return { json };
+  return { response, json };
 }
 
 export async function addCar(car: Car) {

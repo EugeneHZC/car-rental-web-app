@@ -19,10 +19,11 @@ const RentalHistory = () => {
   async function fetchData() {
     const { response, json } = await getAllRentals();
 
-    if (response.ok) {
+    if (response.ok && json.length) {
       setRentals(json);
-      setIsLoading(false);
     }
+
+    setIsLoading(false);
   }
 
   useEffect(() => {
