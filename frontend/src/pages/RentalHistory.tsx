@@ -24,7 +24,6 @@ const RentalHistory = () => {
 
   useEffect(() => {
     if (!user) navigate("/login");
-    if (rentals.length === 0) setIsLoading(true);
 
     fetchData();
   }, []);
