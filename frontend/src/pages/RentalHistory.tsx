@@ -19,7 +19,10 @@ const RentalHistory = () => {
   async function fetchData() {
     const { response, json } = await getAllRentals();
 
-    if (response.ok) setRentals(json);
+    if (response.ok) {
+      setRentals(json);
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -27,10 +30,6 @@ const RentalHistory = () => {
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, [rentals]);
 
   return (
     <>

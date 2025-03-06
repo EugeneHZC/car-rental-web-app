@@ -59,11 +59,14 @@ const Profile = () => {
         // get branch address and all rentals for staff
         if (!staff) return;
 
-        const { response, json: branchData } = await getBranchByBranchNo(staff?.BranchNo);
-        if (response.ok && branchData) setBranch(branchData);
+        const { response: branchResponse, json: branchData } = await getBranchByBranchNo(staff?.BranchNo);
+        if (branchResponse.ok && branchData) setBranch(branchData);
 
-        const { json } = await getAllRentals();
-        if (json.length) setRentals(json);
+        const { response: rentalsResponse, json } = await getAllRentals();
+        if (rentalsResponse.ok && json.length) {
+          setRentals(json);
+          setIsLoading(false);
+        }
       }
     } catch (e) {
       console.log(e);
@@ -83,10 +86,6 @@ const Profile = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, [user, customer]);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, [rentals]);
 
   return (
     <div className="profile-container">
