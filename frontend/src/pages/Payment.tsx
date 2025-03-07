@@ -45,8 +45,6 @@ const Payment = () => {
 
       const { json } = await getRentalByNRICAndCarPlate(customer.NRIC, car.CarPlateNo);
 
-      console.log(json);
-
       const { response: paymentResponse } = await createPayment(
         paymentTime,
         paymentMethod,
