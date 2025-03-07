@@ -64,7 +64,9 @@ const Payment = () => {
 
     const currentDateUTC = new Date();
 
-    const currentDate = new Date(currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * (60 * 1000))
+    const currentDate = new Date(
+      currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
+    )
       .toISOString()
       .replace("T", " ")
       .slice(0, 19);
@@ -73,9 +75,9 @@ const Payment = () => {
       if (rentalId) {
         const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
-        if (existingPayment.length !== 0) {
+        if (existingPayment) {
           const { response: paymentResponse } = await updatePayment(
-            existingPayment[0].PaymentID,
+            existingPayment.PaymentID,
             currentDate,
             paymentMethod,
             amountPaid

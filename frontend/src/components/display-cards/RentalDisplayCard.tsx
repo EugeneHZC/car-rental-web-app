@@ -19,21 +19,24 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
   const navigate = useNavigate();
 
   const formattedRentalDate = new Date(
-    new Date(rental.RentalDate).getTime() - new Date(rental.RentalDate).getTimezoneOffset() * (60 * 1000)
+    new Date(rental.RentalDate).getTime() -
+      new Date(rental.RentalDate).getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
   )
     .toISOString()
     .replace("T", " ")
     .slice(0, 16);
 
   const formattedPickUpTime = new Date(
-    new Date(rental.PickUpTime).getTime() - new Date(rental.PickUpTime).getTimezoneOffset() * (60 * 1000)
+    new Date(rental.PickUpTime).getTime() -
+      new Date(rental.PickUpTime).getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
   )
     .toISOString()
     .replace("T", " ")
     .slice(0, 16);
 
   const formattedDropOffTime = new Date(
-    new Date(rental.DropOffTime).getTime() - new Date(rental.DropOffTime).getTimezoneOffset() * (60 * 1000)
+    new Date(rental.DropOffTime).getTime() -
+      new Date(rental.DropOffTime).getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
   )
     .toISOString()
     .replace("T", " ")
@@ -43,7 +46,8 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
     payment?.PaymentDate == null
       ? ""
       : new Date(
-          new Date(payment.PaymentDate).getTime() - new Date(payment.PaymentDate).getTimezoneOffset() * (60 * 1000)
+          new Date(payment.PaymentDate).getTime() -
+            new Date(payment.PaymentDate).getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
         )
           .toISOString()
           .replace("T", " ")
