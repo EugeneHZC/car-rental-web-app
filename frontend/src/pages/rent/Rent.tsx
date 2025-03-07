@@ -59,15 +59,11 @@ const Rent = () => {
       state: {
         car,
         branch,
-        pickUpTime: new Date(
-          pickUpTime.getTime() - pickUpTime.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
-        )
+        pickUpTime: new Date(pickUpTime.getTime() - pickUpTime.getTimezoneOffset() * 60000)
           .toISOString()
           .slice(0, 16)
           .replace("T", " "),
-        dropOffTime: new Date(
-          dropOffTime.getTime() - pickUpTime.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
-        )
+        dropOffTime: new Date(dropOffTime.getTime() - pickUpTime.getTimezoneOffset() * 60000)
           .toISOString()
           .slice(0, 16)
           .replace("T", " "),
@@ -112,9 +108,7 @@ const Rent = () => {
                 type="datetime-local"
                 name="start-date"
                 required
-                value={new Date(
-                  pickUpTime.getTime() - pickUpTime.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
-                )
+                value={new Date(pickUpTime.getTime() - pickUpTime.getTimezoneOffset() * 60000)
                   .toISOString()
                   .slice(0, 16)}
                 onChange={(e) => {
@@ -129,9 +123,7 @@ const Rent = () => {
                 type="datetime-local"
                 name="end-date"
                 required
-                value={new Date(
-                  dropOffTime.getTime() - dropOffTime.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
-                )
+                value={new Date(dropOffTime.getTime() - dropOffTime.getTimezoneOffset() * 60000)
                   .toISOString()
                   .slice(0, 16)}
                 onChange={(e) => {

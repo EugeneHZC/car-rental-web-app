@@ -64,9 +64,7 @@ const Payment = () => {
 
     const currentDateUTC = new Date();
 
-    const currentDate = new Date(
-      currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * import.meta.env.VITE_LOCAL_TIME_CONVERSION
-    )
+    const currentDate = new Date(currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * 60000)
       .toISOString()
       .replace("T", " ")
       .slice(0, 19);
