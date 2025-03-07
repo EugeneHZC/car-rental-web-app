@@ -120,7 +120,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       {openedModal === "edit-profile" && (
-        <EditProfileModal setOpenedModal={setOpenedModal} currentStaffBranch={branch?.BranchNo ?? ""} />
+        <EditProfileModal setOpenedModal={setOpenedModal} currentStaffBranch={branch?.Address ?? ""} />
       )}
       {openedModal === "change-password" && <ChangePasswordModal setOpenedModal={setOpenedModal} />}
       {openedModal === "delete-profile" && (
