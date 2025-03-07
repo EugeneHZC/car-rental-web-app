@@ -69,6 +69,8 @@ const Payment = () => {
       .replace("T", " ")
       .slice(0, 19);
 
+    return console.log(currentDate);
+
     try {
       if (rentalId) {
         const { json: existingPayment } = await getPaymentByRentalId(rentalId);
