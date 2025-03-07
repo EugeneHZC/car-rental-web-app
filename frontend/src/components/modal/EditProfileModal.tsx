@@ -26,7 +26,8 @@ const EditProfileModal = ({
     user?.role === "Customer" ? customer?.PhoneNumber ?? "" : staff?.PhoneNumber ?? ""
   );
   // includes customer's address or staff's branch address
-  const [address, setAddress] = useState(user?.role === "Customer" ? customer?.Address ?? "" : currentStaffBranch);
+  const [address, setAddress] = useState(customer?.Address ?? "");
+  const [branchNo, setBranchNo] = useState(currentStaffBranch);
 
   const [branches, setBranches] = useState<Branch[]>([]);
 
@@ -75,7 +76,7 @@ const EditProfileModal = ({
         Gender: staff?.Gender ?? "",
         PhoneNumber: phoneNumber,
         UserID: user.id,
-        BranchNo: branches.find((branch) => branch.Address === address)?.BranchNo ?? "",
+        BranchNo: branchNo,
       };
 
       // update staff info in database
@@ -137,10 +138,10 @@ const EditProfileModal = ({
               </div>
             ) : (
               <div className="input-section">
-                <label htmlFor="branch-address">Address</label>
-                <select name="branch-address" value={address} onChange={(e) => setAddress(e.target.value)}>
+                <label htmlFor="branch-number">Branch Address</label>
+                <select name="branch-number" value={branchNo} onChange={(e) => setBranchNo(e.target.value)}>
                   {branches.map((branch) => (
-                    <option value={branch.Address} key={branch.BranchNo}>
+                    <option value={branch.BranchNo} key={branch.BranchNo}>
                       {branch.Address}
                     </option>
                   ))}

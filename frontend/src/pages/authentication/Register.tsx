@@ -153,14 +153,14 @@ const Register = () => {
               </div>
 
               <div className="input-section">
-                <label htmlFor="branch-number">Branch</label>
-                <select name="branch-number" value={branchNo} onChange={(e) => setBranchNo(e.target.value)}>
+                <label htmlFor="branch-address">Branch Address</label>
+                <select name="branch-address" value={branchNo} onChange={(e) => setBranchNo(e.target.value)}>
                   <option value="default" disabled className="option-disabled">
                     --Select your branch number--
                   </option>
                   {availableBranches.map((branch) => (
                     <option value={branch.BranchNo} key={branch.BranchNo}>
-                      {branch.BranchNo}
+                      {branch.Address}
                     </option>
                   ))}
                 </select>

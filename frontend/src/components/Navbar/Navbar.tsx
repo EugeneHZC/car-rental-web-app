@@ -5,12 +5,14 @@ import Dropdown from "../dropdown/Dropdown";
 import { links } from "../../constantLinks";
 import { useEffect, useState } from "react";
 import "./navbar.css";
+import { useStaffContext } from "../../hooks/useStaffContext";
 
 const SMALL_SCREEN_SIZE = 700;
 
 const Navbar = () => {
   const { user, dispatch: userDispatch } = useAuthContext();
   const { dispatch: customerDispatch } = useCustomerContext();
+  const { dispatch: staffDispatch } = useStaffContext();
 
   const [isSmallerScreen, setIsSmallerScreen] = useState(window.innerWidth < SMALL_SCREEN_SIZE);
 
@@ -22,6 +24,7 @@ const Navbar = () => {
     localStorage.removeItem(import.meta.env.VITE_LOCAL_STORAGE_KEY);
     userDispatch({ type: "LOGOUT", payload: null });
     customerDispatch({ payload: null });
+    staffDispatch({ payload: null });
   }
 
   useEffect(() => {
