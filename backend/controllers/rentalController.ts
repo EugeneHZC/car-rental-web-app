@@ -3,7 +3,8 @@ import { db } from "../connect";
 import { RowDataPacket } from "mysql2";
 
 export function createRental(req: Request, res: Response) {
-  const query = `INSERT INTO RENTAL(PickUpTime, DropOffTime, TotalPrice, PaymentStatus, CarPlateNo, NRIC) VALUES (
+  const query = `INSERT INTO RENTAL(RentalDate, PickUpTime, DropOffTime, TotalPrice, PaymentStatus, CarPlateNo, NRIC) VALUES (
+    '${req.body.rentalDate}',
     '${req.body.pickUpTime}',
     '${req.body.dropOffTime}',
     ${req.body.totalPrice},

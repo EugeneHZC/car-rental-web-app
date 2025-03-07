@@ -7,6 +7,7 @@ export async function createRental(rental: Rental) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      rentalDate: rental.RentalDate,
       pickUpTime: rental.PickUpTime,
       dropOffTime: rental.DropOffTime,
       totalPrice: rental.TotalPrice,
