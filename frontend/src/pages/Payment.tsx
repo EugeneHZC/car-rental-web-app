@@ -16,8 +16,15 @@ const Payment = () => {
   const { customer } = useCustomerContext();
   const { user } = useAuthContext();
 
+  const currentTime = new Date();
+
+  const currentTimeFormatted = new Date(currentTime.getTime() - currentTime.getTimezoneOffset() * 60000)
+    .toISOString()
+    .replace("T", " ")
+    .slice(0, 19);
+
   async function handleMakeRentAndPayment(
-    paymentDate: string | null,
+    paymentTime: string | null,
     paymentStatus: "Paid" | "Not Paid",
     paymentMethod: string,
     amountPaid: number
@@ -27,7 +34,7 @@ const Payment = () => {
     try {
       const { response: rentalResponse } = await createRental({
         RentalID: 0,
-        RentalDate: "",
+        RentalDate: currentTimeFormatted,
         PickUpTime: pickUpTime,
         DropOffTime: dropOffTime,
         TotalPrice: totalPrice,
@@ -39,7 +46,7 @@ const Payment = () => {
       const { json } = await getRentalByNRICAndCarPlate(customer.NRIC, car.CarPlateNo);
 
       const { response: paymentResponse } = await createPayment(
-        paymentDate,
+        paymentTime,
         paymentMethod,
         amountPaid,
         json[0].RentalID
@@ -62,13 +69,6 @@ const Payment = () => {
 
     if (paymentMethod === "default") return alert("Please choose a payment method.");
 
-    const currentDateUTC = new Date();
-
-    const currentDate = new Date(currentDateUTC.getTime() - currentDateUTC.getTimezoneOffset() * 60000)
-      .toISOString()
-      .replace("T", " ")
-      .slice(0, 19);
-
     try {
       if (rentalId) {
         const { json: existingPayment } = await getPaymentByRentalId(rentalId);
@@ -76,7 +76,7 @@ const Payment = () => {
         if (existingPayment) {
           const { response: paymentResponse } = await updatePayment(
             existingPayment.PaymentID,
-            currentDate,
+            currentTimeFormatted,
             paymentMethod,
             amountPaid
           );
@@ -90,7 +90,7 @@ const Payment = () => {
         }
       }
 
-      handleMakeRentAndPayment(currentDate, "Paid", paymentMethod, amountPaid);
+      handleMakeRentAndPayment(currentTimeFormatted, "Paid", paymentMethod, amountPaid);
     } catch (e) {
       console.log(e);
     }
