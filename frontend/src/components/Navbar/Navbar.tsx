@@ -65,7 +65,7 @@ const Navbar = () => {
               })}
             </div>
           ) : (
-            <Dropdown />
+            <Dropdown logoutCallback={handleLogout} />
           )}
         </>
       ) : (

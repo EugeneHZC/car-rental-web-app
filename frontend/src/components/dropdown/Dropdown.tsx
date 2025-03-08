@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import DropdownButton from "./DropdownButton";
 import DropdownContent from "./DropdownContent";
 
-const Dropdown = () => {
+const Dropdown = ({ logoutCallback }: { logoutCallback: () => void }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     function handleClickOutsideDropdown(event: MouseEvent) {
-      if (isDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     }
@@ -24,7 +24,11 @@ const Dropdown = () => {
   return (
     <div className="dropdown" ref={dropdownRef}>
       <DropdownButton isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} />
-      <DropdownContent isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} />
+      <DropdownContent
+        isDropdownOpen={isDropdownOpen}
+        setIsDropdownOpen={setIsDropdownOpen}
+        logoutCallback={logoutCallback}
+      />
     </div>
   );
 };
