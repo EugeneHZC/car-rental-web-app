@@ -171,9 +171,9 @@ const RentalDisplayCard = ({
         user?.Email ?? "",
         rental.RentalDate.replace("T", " ").slice(0, 19)
       );
-    }
 
-    fetchCallback();
+      fetchCallback();
+    }
   }, [customerUser]);
 
   if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
