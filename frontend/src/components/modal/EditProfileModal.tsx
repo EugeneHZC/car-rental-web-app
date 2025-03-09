@@ -90,7 +90,7 @@ const EditProfileModal = ({
 
     if (response.ok) {
       alert(json);
-      const updatedUser = { id: user.UserID, name, email, role: user.Role };
+      const updatedUser = { UserID: user.UserID, Name: name, Email: email, Role: user.Role };
 
       dispatch({ type: "LOGIN", payload: updatedUser });
 
