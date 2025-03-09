@@ -10,7 +10,7 @@ import { getPaymentByRentalId } from "../../api/payment";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import { deleteRentalById } from "../../api/rental";
 import { getUserByUserId } from "../../api/auth";
-// import { sendEmail } from "../../api/email";
+import { sendEmail } from "../../api/email";
 
 const RentalDisplayCard = ({
   rental,
@@ -162,19 +162,19 @@ const RentalDisplayCard = ({
     fetchBranchData();
   }, [car]);
 
-  // useEffect(() => {
-  //   if (customerUser) {
-  //     sendEmail(
-  //       customerUser?.Name ?? "",
-  //       customerUser?.Email ?? "",
-  //       user?.Name ?? "",
-  //       user?.Email ?? "",
-  //       rental.RentalDate.replace("T", " ").slice(0, 19)
-  //     );
-  //   }
+  useEffect(() => {
+    if (customerUser) {
+      sendEmail(
+        customerUser?.Name ?? "",
+        customerUser?.Email ?? "",
+        user?.Name ?? "",
+        user?.Email ?? "",
+        rental.RentalDate.replace("T", " ").slice(0, 19)
+      );
+    }
 
-  //   fetchCallback();
-  // }, [customerUser]);
+    fetchCallback();
+  }, [customerUser]);
 
   if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
