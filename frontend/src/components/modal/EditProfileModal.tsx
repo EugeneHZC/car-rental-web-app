@@ -20,13 +20,13 @@ const EditProfileModal = ({
   const { customer, dispatch: customerDispatch } = useCustomerContext();
   const { staff, dispatch: staffDispatch } = useStaffContext();
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
+  const [name, setName] = useState(user?.Name ?? "");
+  const [email, setEmail] = useState(user?.Email ?? "");
   const [phoneNumber, setPhoneNumber] = useState(
-    user?.role === "Customer" ? customer?.PhoneNumber ?? "" : staff?.PhoneNumber ?? ""
+    user?.Role === "Customer" ? customer?.PhoneNumber ?? "" : staff?.PhoneNumber ?? ""
   );
   // includes customer's address or staff's branch address
-  const [address, setAddress] = useState(user?.role === "Customer" ? customer?.Address ?? "" : currentStaffBranch);
+  const [address, setAddress] = useState(user?.Role === "Customer" ? customer?.Address ?? "" : currentStaffBranch);
 
   const [branches, setBranches] = useState<Branch[]>([]);
 
@@ -50,7 +50,7 @@ const EditProfileModal = ({
     if (!user) return;
     if (!customer && !staff) return;
 
-    if (user.role === "Customer") {
+    if (user.Role === "Customer") {
       // create new customer object
       const updatedCustomer: Customer = {
         NRIC: customer?.NRIC ?? "",
@@ -59,7 +59,7 @@ const EditProfileModal = ({
         PhoneNumber: phoneNumber,
         LicenseNumber: customer?.LicenseNumber ?? 0,
         Address: address,
-        UserID: user.id,
+        UserID: user.UserID,
       };
 
       // update customer info in database
@@ -74,7 +74,7 @@ const EditProfileModal = ({
         Name: name,
         Gender: staff?.Gender ?? "",
         PhoneNumber: phoneNumber,
-        UserID: user.id,
+        UserID: user.UserID,
         BranchNo: branches.find((branch) => branch.Address === address)?.BranchNo ?? "",
       };
 
@@ -86,11 +86,11 @@ const EditProfileModal = ({
     }
 
     // update user info in database
-    const { response, json } = await updateUserInfo(name, email, user.id);
+    const { response, json } = await updateUserInfo(name, email, user.UserID);
 
     if (response.ok) {
       alert(json);
-      const updatedUser = { id: user.id, name, email, role: user.role };
+      const updatedUser = { id: user.UserID, name, email, role: user.Role };
 
       dispatch({ type: "LOGIN", payload: updatedUser });
 
@@ -130,7 +130,7 @@ const EditProfileModal = ({
               />
             </div>
 
-            {user?.role === "Customer" ? (
+            {user?.Role === "Customer" ? (
               <div className="input-section">
                 <label htmlFor="address">Address</label>
                 <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} />

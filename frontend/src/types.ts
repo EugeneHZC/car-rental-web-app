@@ -1,8 +1,8 @@
 export type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
+  UserID: number;
+  Name: string;
+  Email: string;
+  Role: string;
 };
 
 export type Car = {

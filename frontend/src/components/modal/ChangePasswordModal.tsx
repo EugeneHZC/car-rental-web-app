@@ -22,7 +22,7 @@ const ChangePasswordModal = ({
 
     if (!user) return;
 
-    const { response, json } = await updateUserPassword(oldPassword, newPassword, user.id);
+    const { response, json } = await updateUserPassword(oldPassword, newPassword, user.UserID);
 
     if (response.ok) {
       alert(json);

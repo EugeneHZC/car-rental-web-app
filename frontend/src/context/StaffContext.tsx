@@ -27,7 +27,7 @@ const StaffContextProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
 
     try {
-      const { response, json } = await getStaffByUserId(user?.id);
+      const { response, json } = await getStaffByUserId(user?.UserID);
 
       if (response.ok) {
         dispatch({ payload: json });

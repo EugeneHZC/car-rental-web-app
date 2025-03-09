@@ -23,10 +23,14 @@ const Home = () => {
   const navigate = useNavigate();
 
   async function fetchData() {
+    setIsLoading(true);
+
     try {
       const { response: carResponse, json: carData } = await getAllCars();
       if (carResponse.ok && carData.length > 0) {
         setCars(carData);
+      } else {
+        setCars([]);
       }
 
       const { response: branchResponse, json: branchData } = await getAllBranches();
@@ -90,7 +94,7 @@ const Home = () => {
           {cars.length > 0 &&
             cars
               .filter((car) => {
-                const statusFilter = car.Status === "Good" && user?.role === "Customer";
+                const statusFilter = car.Status === "Good" && user?.Role === "Customer";
 
                 const modelFilter = car.Model.toLowerCase().includes(searchDesc.toLowerCase());
                 const colourFilter = car.Colour.toLowerCase().includes(searchDesc.toLowerCase());
@@ -118,12 +122,12 @@ const Home = () => {
                   return (
                     (modelFilter || colourFilter || priceFilter || branchFilter) &&
                     dateFilter &&
-                    (statusFilter || user?.role === "Staff")
+                    (statusFilter || user?.Role === "Staff")
                   );
 
                 return (
                   (modelFilter || colourFilter || priceFilter || branchFilter) &&
-                  (statusFilter || user?.role === "Staff")
+                  (statusFilter || user?.Role === "Staff")
                 );
               })
               .map((car) => (

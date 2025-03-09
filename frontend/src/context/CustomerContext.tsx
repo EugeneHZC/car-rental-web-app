@@ -27,7 +27,7 @@ const CustomerContextProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
 
     try {
-      const { response, json } = await getCustomerByUserId(user.id);
+      const { response, json } = await getCustomerByUserId(user.UserID);
 
       if (response.ok) {
         setCustomer(json);

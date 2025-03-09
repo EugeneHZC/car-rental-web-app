@@ -68,3 +68,13 @@ export async function updateRentalPaymentStatus(rentalId: number, paymentStatus:
 
   return { response, json };
 }
+
+export async function deleteRentalById(rentalId: number) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/rentals/rental/delete/${rentalId}`, {
+    method: "DELETE",
+  });
+
+  const json = await response.json();
+
+  return { response, json };
+}

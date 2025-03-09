@@ -51,7 +51,7 @@ const AddCar = () => {
   }
 
   useEffect(() => {
-    if (!user || user?.role !== "Staff") navigate("/");
+    if (!user || user?.Role !== "Staff") navigate("/");
 
     fetchData();
   }, []);

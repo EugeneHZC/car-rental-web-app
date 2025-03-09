@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Branch, Car, Customer, Payment, Rental } from "../../types";
+import { Branch, Car, Customer, Payment, Rental, User } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { getCarByCarPlate } from "../../api/car";
 import { getBranchByBranchNo } from "../../api/branch";
@@ -7,12 +7,27 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 import "./display-card.css";
 import { getCustomerByNRIC } from "../../api/customer";
 import { getPaymentByRentalId } from "../../api/payment";
+import ConfirmationModal from "../modal/ConfirmationModal";
+import { deleteRentalById } from "../../api/rental";
+import { getUserByUserId } from "../../api/auth";
+import { sendEmail } from "../../api/email";
 
-const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBranchNo: string | null }) => {
+const RentalDisplayCard = ({
+  rental,
+  staffBranchNo,
+  fetchCallback,
+}: {
+  rental: Rental;
+  staffBranchNo: string | null;
+  fetchCallback: () => {};
+}) => {
   const [car, setCar] = useState<Car>();
   const [branch, setBranch] = useState<Branch>();
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
   const [payment, setPayment] = useState<Payment | null>(null);
+
+  const [customerUser, setCustomerUser] = useState<User | null>(null);
+  const [openedModal, setOpenedModal] = useState("");
 
   const { user } = useAuthContext();
 
@@ -110,6 +125,32 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
     }
   }
 
+  async function fetchUserData() {
+    const { response, json } = await getUserByUserId(rentalCustomer?.UserID ?? 0);
+
+    if (response.ok) setCustomerUser(json);
+  }
+
+  async function removeRent() {
+    try {
+      // remove rental from database
+      const { response: rentalResponse } = await deleteRentalById(rental.RentalID);
+
+      if (!rentalResponse.ok) return alert("Oops! Something went wrong.");
+      alert("Rental removed successfully!");
+
+      if (user?.Role !== "Staff") return fetchCallback();
+
+      fetchUserData();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function handleCancelRentClicked() {
+    setOpenedModal("cancel-rent");
+  }
+
   useEffect(() => {
     fetchCarData();
     fetchCustomerData();
@@ -120,10 +161,33 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
     fetchBranchData();
   }, [car]);
 
+  useEffect(() => {
+    if (customerUser) {
+      sendEmail(
+        customerUser?.Name ?? "",
+        customerUser?.Email ?? "",
+        user?.Name ?? "",
+        user?.Email ?? "",
+        rental.RentalDate.replace("T", " ").slice(0, 19)
+      );
+    }
+
+    fetchCallback();
+  }, [customerUser]);
+
   if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
   return (
     <div className="card-container">
+      {openedModal === "cancel-rent" && (
+        <ConfirmationModal
+          setOpenedModal={setOpenedModal}
+          content="Are you sure you want to cancel this rent?"
+          handleCallback={removeRent}
+          dangerButtonText="Cancel"
+        />
+      )}
+
       <div className="rental-infos">
         <h3 className="car-model">{car?.Model}</h3>
         <div className="rental-info">
@@ -145,7 +209,7 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
 
         <div className="break-line" />
 
-        {user?.role === "Staff" && (
+        {user?.Role === "Staff" && (
           <>
             <div className="rental-info">
               <p className="rental-info-title">Customer's Name: </p>
@@ -158,7 +222,7 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
           </>
         )}
 
-        {user?.role === "Staff" && <div className="break-line" />}
+        {user?.Role === "Staff" && <div className="break-line" />}
 
         <div className="rental-info">
           <p className="rental-info-title">Rental Date: </p>
@@ -191,9 +255,18 @@ const RentalDisplayCard = ({ rental, staffBranchNo }: { rental: Rental; staffBra
         )}
       </div>
 
-      {rental.PaymentStatus === "Not Paid" && user?.role === "Customer" && (
-        <button className="btn-normal" type="button" onClick={handleClick}>
-          Pay
+      {rental.PaymentStatus === "Not Paid" && user?.Role === "Customer" ? (
+        <div className="buttons">
+          <button className="btn-normal" type="button" onClick={handleClick}>
+            Pay
+          </button>
+          <button className="btn-danger" type="button" onClick={handleCancelRentClicked}>
+            Cancel Rent
+          </button>
+        </div>
+      ) : (
+        <button className="btn-danger" type="button" onClick={handleCancelRentClicked}>
+          Cancel Rent
         </button>
       )}
     </div>

@@ -56,8 +56,10 @@ const Profile = () => {
   }
 
   async function fetchData() {
+    setIsLoading(true);
+
     try {
-      if (user?.role === "Customer") {
+      if (user?.Role === "Customer") {
         // get rentals for customer based on nric
         if (!customer) return;
 
@@ -73,6 +75,8 @@ const Profile = () => {
         const { response: rentalsResponse, json } = await getAllRentals();
         if (rentalsResponse.ok && json.length) {
           setRentals(json);
+        } else {
+          setRentals([]);
         }
       }
 
@@ -83,19 +87,20 @@ const Profile = () => {
   }
 
   async function handleDeleteProfile() {
-    if (user?.role === "Customer") {
-      const { response: customerResponse } = await deleteCustomer(user?.id ?? 0);
+    if (user?.Role === "Customer") {
+      const { response: customerResponse, json } = await deleteCustomer(user?.UserID ?? 0);
+      console.log(json);
 
       if (!customerResponse.ok) return alert("Oops! Something went wrong.");
       customerDispatch({ payload: null });
     } else {
-      const { response: staffResponse } = await deleteStaff(user?.id ?? 0);
+      const { response: staffResponse } = await deleteStaff(user?.UserID ?? 0);
 
       if (!staffResponse.ok) return alert("Oops! Something went wrong.");
       staffDispatch({ payload: null });
     }
 
-    const { response: userResponse } = await deleteUser(user?.id ?? 0);
+    const { response: userResponse } = await deleteUser(user?.UserID ?? 0);
 
     if (!userResponse.ok) return alert("Oops! Something went wrong.");
     alert("Profile deleted successfully");
@@ -128,24 +133,25 @@ const Profile = () => {
           setOpenedModal={setOpenedModal}
           handleCallback={handleDeleteProfile}
           content="Are you sure you want to delete your profile?"
+          dangerButtonText="Delete"
         />
       )}
 
       <div className="profile-details">
         <div className="profile-header">
-          <p className="name">{user?.name}</p>
-          <p className="account-type">{user?.role} Account</p>
+          <p className="name">{user?.Name}</p>
+          <p className="account-type">{user?.Role} Account</p>
         </div>
         <div className="profile-content">
           <div className="profile-detail">
             <h4>Email</h4>
-            <p>{user?.email}</p>
+            <p>{user?.Email}</p>
           </div>
           <div className="profile-detail">
             <h4>Phone Number</h4>
-            <p>{user?.role === "Customer" ? customer?.PhoneNumber : staff?.PhoneNumber}</p>
+            <p>{user?.Role === "Customer" ? customer?.PhoneNumber : staff?.PhoneNumber}</p>
           </div>
-          {user?.role === "Customer" ? (
+          {user?.Role === "Customer" ? (
             <>
               <div className="profile-detail">
                 <h4>NRIC</h4>
@@ -172,7 +178,7 @@ const Profile = () => {
         </div>
 
         <div className="profile-buttons">
-          {user?.role === "Customer" && (
+          {user?.Role === "Customer" && (
             <button
               className={customer ? "btn-disabled" : "btn-normal"}
               type="button"
@@ -200,7 +206,7 @@ const Profile = () => {
       {isScreenSmall && <div className="break-line" />}
 
       <div className="rents-made">
-        <h3 className="title">Rents Made {user?.role === "Staff" && "By Customers"}</h3>
+        <h3 className="title">Rents Made {user?.Role === "Staff" && "By Customers"}</h3>
 
         {isLoading ? (
           <p className="loading-message">Loading...</p>
@@ -216,7 +222,12 @@ const Profile = () => {
                 return currentTime.getTime() <= rentalDropOffTime.getTime();
               })
               .map((rental) => (
-                <RentalDisplayCard rental={rental} key={rental.RentalID} staffBranchNo={staff?.BranchNo ?? ""} />
+                <RentalDisplayCard
+                  rental={rental}
+                  key={rental.RentalID}
+                  staffBranchNo={staff?.BranchNo ?? ""}
+                  fetchCallback={fetchData}
+                />
               ))}
           </div>
         )}

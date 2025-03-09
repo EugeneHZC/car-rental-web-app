@@ -70,6 +70,7 @@ const CarDisplayCard = ({
           setOpenedModal={setOpenedModal}
           handleCallback={handleRemoveCar}
           content="Are you sure you want to remove this car?"
+          dangerButtonText="Remove"
         />
       )}
       {openedModal === "edit-car-modal" && (
@@ -93,7 +94,7 @@ const CarDisplayCard = ({
           <p className="car-info-title">Price Per Day:</p>
           <p className="car-info-content">RM {car.PricePerDay}</p>
         </div>
-        {user?.role === "Staff" && (
+        {user?.Role === "Staff" && (
           <div className="car-info">
             <p className="car-info-title">Car Status:</p>
             <p className="car-info-content">{car.Status}</p>
@@ -105,7 +106,7 @@ const CarDisplayCard = ({
         </div>
       </div>
 
-      {user?.role === "Customer" ? (
+      {user?.Role === "Customer" ? (
         <button className="btn-normal" type="button" onClick={handleClick}>
           Rent
         </button>

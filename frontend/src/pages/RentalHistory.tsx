@@ -17,10 +17,14 @@ const RentalHistory = () => {
   const navigate = useNavigate();
 
   async function fetchData() {
+    setIsLoading(true);
+
     const { response, json } = await getAllRentals();
 
     if (response.ok && json.length) {
       setRentals(json);
+    } else {
+      setRentals([]);
     }
 
     setIsLoading(false);
@@ -41,7 +45,12 @@ const RentalHistory = () => {
       ) : (
         <div className="cards">
           {rentals.map((rental) => (
-            <RentalDisplayCard key={rental.RentalID} rental={rental} staffBranchNo={staff?.BranchNo ?? ""} />
+            <RentalDisplayCard
+              key={rental.RentalID}
+              rental={rental}
+              staffBranchNo={staff?.BranchNo ?? ""}
+              fetchCallback={fetchData}
+            />
           ))}
         </div>
       )}

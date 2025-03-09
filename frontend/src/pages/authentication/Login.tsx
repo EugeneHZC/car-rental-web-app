@@ -26,10 +26,10 @@ const Login = () => {
         alert("User logged in successfully!");
 
         const user = {
-          id: json.others.UserID,
-          name: json.others.Name,
-          email: json.others.Email,
-          role: json.others.Role,
+          UserID: json.others.UserID,
+          Name: json.others.Name,
+          Email: json.others.Email,
+          Role: json.others.Role,
         };
 
         dispatch({

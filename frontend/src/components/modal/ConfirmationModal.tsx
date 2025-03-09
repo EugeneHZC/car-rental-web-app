@@ -4,10 +4,12 @@ const ConfirmationModal = ({
   setOpenedModal,
   handleCallback,
   content,
+  dangerButtonText,
 }: {
   setOpenedModal: React.Dispatch<React.SetStateAction<string>>;
   handleCallback: () => {};
   content: string;
+  dangerButtonText: string;
 }) => {
   function closeModal() {
     setOpenedModal("");
@@ -20,11 +22,18 @@ const ConfirmationModal = ({
         <p>{content}</p>
 
         <div className="buttons">
-          <button className="btn-danger" type="button" onClick={handleCallback}>
-            Remove
+          <button
+            className="btn-danger"
+            type="button"
+            onClick={() => {
+              handleCallback();
+              closeModal();
+            }}
+          >
+            {dangerButtonText}
           </button>
           <button className="btn-gray" type="button" onClick={closeModal}>
-            Cancel
+            Back
           </button>
         </div>
       </div>

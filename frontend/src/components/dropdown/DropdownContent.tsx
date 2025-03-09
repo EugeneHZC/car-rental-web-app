@@ -19,7 +19,7 @@ const DropdownContent = ({
       {links.map((link) => {
         if (link.linkText === "Add Car")
           return (
-            user?.role === "Staff" && (
+            user?.Role === "Staff" && (
               <DropdownItem
                 key={link.linkTo}
                 linkTo={link.linkTo}

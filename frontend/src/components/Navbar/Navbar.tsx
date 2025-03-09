@@ -50,7 +50,7 @@ const Navbar = () => {
 
                 if (link.linkText === "Add Car")
                   return (
-                    user.role === "Staff" && (
+                    user.Role === "Staff" && (
                       <Link key={link.linkTo} to={link.linkTo} className="nav-link">
                         {link.linkText}
                       </Link>

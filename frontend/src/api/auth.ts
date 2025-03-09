@@ -63,3 +63,11 @@ export async function deleteUser(userId: number) {
 
   return { response, json };
 }
+
+export async function getUserByUserId(userId: number) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/user/${userId}`);
+
+  const json = await response.json();
+
+  return { response, json };
+}

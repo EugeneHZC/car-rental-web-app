@@ -9,7 +9,7 @@ const CustomerRegistration = () => {
 
   const navigate = useNavigate();
 
-  const name = user?.name;
+  const name = user?.Name;
   const [gender, setGender] = useState("");
   const [nric, setNRIC] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -31,7 +31,7 @@ const CustomerRegistration = () => {
         phoneNumber,
         licenseNumber,
         address,
-        user?.id
+        user?.UserID
       );
 
       if (response.ok) {
@@ -50,7 +50,7 @@ const CustomerRegistration = () => {
             PhoneNumber: phoneNumber,
             LicenseNumber: licenseNumber,
             Address: address,
-            UserID: user?.id ?? null,
+            UserID: user?.UserID ?? null,
           },
         });
 
