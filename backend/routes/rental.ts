@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createRental,
+  deleteRentalById,
   getAllRentals,
   getRentalById,
   getRentalByNRICAndCarPlate,
@@ -18,5 +19,6 @@ rentalRouter.get("/rentalId/:rentalId", getRentalById);
 rentalRouter.get("/carPlateNo/:carPlateNo", getRentalsByCarPlate);
 rentalRouter.get("/", getAllRentals);
 rentalRouter.patch("/rental/update/:rentalId", updateRentalPaymentStatus);
+rentalRouter.delete("/rental/delete/:rentalId", deleteRentalById);
 
 export default rentalRouter;

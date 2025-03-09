@@ -71,12 +71,36 @@ export function getRentalById(req: Request, res: Response) {
 }
 
 export function updateRentalPaymentStatus(req: Request, res: Response) {
-  const query = `UPDATE RENTAL SET PaymentStatus = '${req.body.paymentStatus}'
-  WHERE RentalID = ${req.params.rentalId}`;
+  const selectQuery = `SELECT * FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
 
-  db.query(query, (err, _) => {
+  db.query(selectQuery, (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("Rental not found!");
 
-    res.status(200).json("Rental updated successfully!");
+    const updateQuery = `UPDATE RENTAL SET PaymentStatus = '${req.body.paymentStatus}'
+    WHERE RentalID = ${req.params.rentalId}`;
+
+    db.query(updateQuery, (err, _) => {
+      if (err) return res.status(500).json(err);
+
+      res.status(200).json("Rental updated successfully!");
+    });
+  });
+}
+
+export function deleteRentalById(req: Request, res: Response) {
+  const selectQuery = `SELECT * FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+
+  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("Rental not found!");
+
+    const deleteQuery = `DELETE FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+
+    db.query(deleteQuery, (err, _) => {
+      if (err) return res.status(500).json(err);
+
+      res.status(200).json("Rental deleted successfully!");
+    });
   });
 }

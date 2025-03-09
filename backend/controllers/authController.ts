@@ -51,7 +51,7 @@ export function login(req: Request, res: Response) {
   });
 }
 
-export async function updateUserInfo(req: Request, res: Response) {
+export function updateUserInfo(req: Request, res: Response) {
   const selectQuery = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
 
   db.query(selectQuery, (err, data: RowDataPacket[]) => {
@@ -68,7 +68,7 @@ export async function updateUserInfo(req: Request, res: Response) {
   });
 }
 
-export async function updateUserPassword(req: Request, res: Response) {
+export function updateUserPassword(req: Request, res: Response) {
   const selectQuery = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
 
   db.query(selectQuery, (err, data: RowDataPacket[]) => {
@@ -105,5 +105,16 @@ export function deleteUser(req: Request, res: Response) {
 
       res.status(200).json("User deleted successfully!");
     });
+  });
+}
+
+export function getUserByUserId(req: Request, res: Response) {
+  const query = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
+
+  db.query(query, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+    if (data.length === 0) return res.status(404).json("No user found!");
+
+    res.status(200).json(data[0]);
   });
 }
