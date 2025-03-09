@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Branch, Car, Customer, Payment, Rental, User } from "../../types";
+import { Branch, Car, Customer, Payment, Rental } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { getCarByCarPlate } from "../../api/car";
 import { getBranchByBranchNo } from "../../api/branch";
@@ -9,24 +9,24 @@ import { getCustomerByNRIC } from "../../api/customer";
 import { getPaymentByRentalId } from "../../api/payment";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import { deleteRentalById } from "../../api/rental";
-import { getUserByUserId } from "../../api/auth";
-import { sendEmail } from "../../api/email";
+// import { getUserByUserId } from "../../api/auth";
+// import { sendEmail } from "../../api/email";
 
 const RentalDisplayCard = ({
   rental,
   staffBranchNo,
-  fetchCallback,
-}: {
+}: // fetchCallback,
+{
   rental: Rental;
   staffBranchNo: string | null;
-  fetchCallback: () => {};
+  // fetchCallback: () => {};
 }) => {
   const [car, setCar] = useState<Car>();
   const [branch, setBranch] = useState<Branch>();
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
   const [payment, setPayment] = useState<Payment | null>(null);
 
-  const [customerUser, setCustomerUser] = useState<User | null>(null);
+  // const [customerUser, setCustomerUser] = useState<User | null>(null);
   const [openedModal, setOpenedModal] = useState("");
 
   const { user } = useAuthContext();
@@ -125,11 +125,11 @@ const RentalDisplayCard = ({
     }
   }
 
-  async function fetchUserData() {
-    const { response, json } = await getUserByUserId(rentalCustomer?.UserID ?? 0);
+  // async function fetchUserData() {
+  //   const { response, json } = await getUserByUserId(rentalCustomer?.UserID ?? 0);
 
-    if (response.ok) setCustomerUser(json);
-  }
+  //   if (response.ok) setCustomerUser(json);
+  // }
 
   async function removeRent() {
     try {
@@ -139,9 +139,9 @@ const RentalDisplayCard = ({
       if (!rentalResponse.ok) return alert("Oops! Something went wrong.");
       alert("Rental removed successfully!");
 
-      if (user?.Role !== "Staff") return fetchCallback();
+      // if (user?.Role !== "Staff") return fetchCallback();
 
-      await fetchUserData();
+      // await fetchUserData();
     } catch (e) {
       console.log(e);
     }
@@ -161,19 +161,19 @@ const RentalDisplayCard = ({
     fetchBranchData();
   }, [car]);
 
-  useEffect(() => {
-    if (customerUser) {
-      sendEmail(
-        customerUser?.Name ?? "",
-        customerUser?.Email ?? "",
-        user?.Name ?? "",
-        user?.Email ?? "",
-        rental.RentalDate.replace("T", " ").slice(0, 19)
-      );
-    }
+  // useEffect(() => {
+  //   if (customerUser) {
+  //     sendEmail(
+  //       customerUser?.Name ?? "",
+  //       customerUser?.Email ?? "",
+  //       user?.Name ?? "",
+  //       user?.Email ?? "",
+  //       rental.RentalDate.replace("T", " ").slice(0, 19)
+  //     );
+  //   }
 
-    fetchCallback();
-  }, [customerUser]);
+  //   fetchCallback();
+  // }, [customerUser]);
 
   if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
