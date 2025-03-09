@@ -65,6 +65,7 @@ const Profile = () => {
 
         const { json } = await getRentalsByNRIC(customer?.NRIC);
         if (json.length) setRentals(json);
+        else setRentals([]);
       } else {
         // get branch address and all rentals for staff
         if (!staff) return;

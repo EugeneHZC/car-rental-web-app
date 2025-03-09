@@ -26,8 +26,8 @@ const ConfirmationModal = ({
             className="btn-danger"
             type="button"
             onClick={() => {
-              handleCallback();
               closeModal();
+              handleCallback();
             }}
           >
             {dangerButtonText}
