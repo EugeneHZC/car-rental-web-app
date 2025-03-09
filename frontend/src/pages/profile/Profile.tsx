@@ -226,7 +226,7 @@ const Profile = () => {
                   rental={rental}
                   key={rental.RentalID}
                   staffBranchNo={staff?.BranchNo ?? ""}
-                  // fetchCallback={fetchData}
+                  fetchCallback={fetchData}
                 />
               ))}
           </div>

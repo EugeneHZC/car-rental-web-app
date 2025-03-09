@@ -15,11 +15,11 @@ import { deleteRentalById } from "../../api/rental";
 const RentalDisplayCard = ({
   rental,
   staffBranchNo,
-}: // fetchCallback,
-{
+  fetchCallback,
+}: {
   rental: Rental;
   staffBranchNo: string | null;
-  // fetchCallback: () => {};
+  fetchCallback: () => {};
 }) => {
   const [car, setCar] = useState<Car>();
   const [branch, setBranch] = useState<Branch>();
@@ -139,7 +139,7 @@ const RentalDisplayCard = ({
       if (!rentalResponse.ok) return alert("Oops! Something went wrong.");
       alert("Rental removed successfully!");
 
-      // if (user?.Role !== "Staff") return fetchCallback();
+      if (user?.Role !== "Staff") return fetchCallback();
 
       // await fetchUserData();
     } catch (e) {

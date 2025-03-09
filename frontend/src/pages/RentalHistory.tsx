@@ -49,7 +49,7 @@ const RentalHistory = () => {
               key={rental.RentalID}
               rental={rental}
               staffBranchNo={staff?.BranchNo ?? ""}
-              // fetchCallback={fetchData}
+              fetchCallback={fetchData}
             />
           ))}
         </div>
