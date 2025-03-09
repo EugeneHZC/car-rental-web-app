@@ -88,7 +88,7 @@ const Profile = () => {
 
   async function handleDeleteProfile() {
     if (user?.Role === "Customer") {
-      const { response: customerResponse, json } = await deleteCustomer(user?.UserID ?? 0);
+      const { response: customerResponse } = await deleteCustomer(user?.UserID ?? 0);
 
       if (!customerResponse.ok) return alert("Oops! Something went wrong.");
       customerDispatch({ payload: null });
