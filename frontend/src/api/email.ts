@@ -11,10 +11,10 @@ export async function sendEmail(
     template_id: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
     user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
     template_params: {
+      customer_name: customerName,
       customer_email: customerEmail,
       staff_name: staffName,
       staff_email: staffEmail,
-      customer_name: customerName,
       rental_date: rentalDate,
     },
   };

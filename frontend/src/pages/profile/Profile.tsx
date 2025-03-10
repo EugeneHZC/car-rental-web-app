@@ -11,9 +11,9 @@ import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
 import { getBranchByBranchNo } from "../../api/branch";
 import ConfirmationModal from "../../components/modal/ConfirmationModal";
-import { deleteCustomer } from "../../api/customer";
+// import { deleteCustomer } from "../../api/customer";
 import { deleteUser } from "../../api/auth";
-import { deleteStaff } from "../../api/staff";
+// import { deleteStaff } from "../../api/staff";
 
 const SMALL_SCREEN_SIZE = 700;
 
@@ -88,23 +88,13 @@ const Profile = () => {
   }
 
   async function handleDeleteProfile() {
-    if (user?.Role === "Customer") {
-      const { response: customerResponse } = await deleteCustomer(user?.UserID ?? 0);
-
-      if (!customerResponse.ok) return alert("Oops! Something went wrong.");
-      customerDispatch({ payload: null });
-    } else {
-      const { response: staffResponse } = await deleteStaff(user?.UserID ?? 0);
-
-      if (!staffResponse.ok) return alert("Oops! Something went wrong.");
-      staffDispatch({ payload: null });
-    }
-
     const { response: userResponse } = await deleteUser(user?.UserID ?? 0);
 
     if (!userResponse.ok) return alert("Oops! Something went wrong.");
     alert("Profile deleted successfully");
     userDispatch({ type: "LOGOUT", payload: null });
+    customerDispatch({ payload: null });
+    staffDispatch({ payload: null });
     localStorage.removeItem(import.meta.env.VITE_LOCAL_STORAGE_KEY);
   }
 

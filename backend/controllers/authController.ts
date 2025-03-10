@@ -35,12 +35,12 @@ export function login(req: Request, res: Response) {
 
   db.query(selectQuery, (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
-    if (data.length == 0) return res.status(404).json("User not found!");
+    if (data.length == 0) return res.status(404).json("Incorrect email!");
 
     // check if the hashed password given is the same as in the database
     const checkPassword = bcrypt.compareSync(req.body.password, data[0].Password);
 
-    if (!checkPassword) return res.status(401).json("Incorrect name, email or password!");
+    if (!checkPassword) return res.status(401).json("Incorrect password!");
 
     if (req.body.name !== data[0].Name) return res.status(401).json("Incorrect name.");
 

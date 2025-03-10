@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { login, register } from "../../api/auth";
+import { deleteUser, login, register } from "../../api/auth";
 import { Branch, Staff } from "../../types";
 import { getAllBranches } from "../../api/branch";
 import { createStaff } from "../../api/staff";
@@ -17,6 +17,7 @@ const Register = () => {
   const [role, setRole] = useState("Customer");
   const [branchNo, setBranchNo] = useState("default");
   const [availableBranches, setAvailableBranches] = useState<Branch[]>([]);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const navigate = useNavigate();
   const { user } = useAuthContext();
@@ -30,10 +31,13 @@ const Register = () => {
   async function handleCustomerSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     if (password !== confirmPassword) {
       alert("Password and confirm password must be the same!");
       setPassword("");
       setConfirmPassword("");
+      setIsButtonClicked(false);
       return;
     }
 
@@ -41,9 +45,11 @@ const Register = () => {
       // create a user
       const { response, json } = await register(name, email, password, role);
 
-      alert(json);
-
-      if (!response.ok) return;
+      if (!response.ok) {
+        alert(json);
+        setIsButtonClicked(false);
+        return;
+      }
 
       if (role === "Staff") {
         // get a user to assign its id to staff
@@ -59,10 +65,17 @@ const Register = () => {
           BranchNo: branchNo,
         };
 
-        const { response } = await createStaff(newStaff);
+        const { response, json: staffJson } = await createStaff(newStaff);
 
-        if (!response.ok) return;
+        if (!response.ok) {
+          alert(staffJson);
+          deleteUser(userData.others.UserID);
+          setIsButtonClicked(false);
+          return;
+        }
       }
+
+      alert("User registered successfully!");
 
       setName("");
       setGender("");
@@ -73,10 +86,13 @@ const Register = () => {
       setPassword("");
       setConfirmPassword("");
       setRole("Customer");
+
       navigate("/login");
     } catch (e) {
       console.log(e);
     }
+
+    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -200,8 +216,8 @@ const Register = () => {
             </select>
           </div>
 
-          <button type="submit" className="btn-normal">
-            Register
+          <button type="submit" className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked}>
+            {isButtonClicked ? "Registering..." : "Register"}
           </button>
         </div>
       </fieldset>

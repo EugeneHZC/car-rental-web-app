@@ -12,6 +12,7 @@ const ChangePasswordModal = ({
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   function closeModal() {
     setOpenedModal("");
@@ -22,12 +23,18 @@ const ChangePasswordModal = ({
 
     if (!user) return;
 
+    setIsButtonClicked(true);
+
     const { response, json } = await updateUserPassword(oldPassword, newPassword, user.UserID);
 
     if (response.ok) {
-      alert(json);
+      alert("Password changed!");
       closeModal();
+    } else {
+      alert(json);
     }
+
+    setIsButtonClicked(false);
   }
 
   return (
@@ -41,6 +48,7 @@ const ChangePasswordModal = ({
               <input
                 type="password"
                 name="old-password"
+                required
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
               />
@@ -51,17 +59,27 @@ const ChangePasswordModal = ({
               <input
                 type="password"
                 name="new-password"
+                required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
 
             <div className="buttons">
-              <button className="btn-normal" type="submit">
-                Save
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                disabled={isButtonClicked}
+                type="submit"
+              >
+                {isButtonClicked ? "Saving..." : "Save"}
               </button>
 
-              <button className="btn-gray" type="button" onClick={closeModal}>
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-gray"}
+                disabled={isButtonClicked}
+                type="button"
+                onClick={closeModal}
+              >
                 Close
               </button>
             </div>

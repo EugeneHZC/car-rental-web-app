@@ -3,25 +3,33 @@ import { db } from "../connect";
 import { RowDataPacket } from "mysql2";
 
 export async function createStaff(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM STAFF WHERE StaffID = '${req.body.StaffID}'`;
-
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  // Check for staff ID already exists
+  const selectStaffIdQuery = `SELECT * FROM STAFF WHERE StaffID = '${req.body.StaffID}'`;
+  db.query(selectStaffIdQuery, (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
-    if (data.length) return res.status(401).json("Staff ID already exists!");
+    if (data.length) return res.status(409).json("Staff ID already used in another account!");
 
-    const insertQuery = `INSERT INTO STAFF VALUES (
-    '${req.body.StaffID}',
-    '${req.body.Name}',
-    '${req.body.Gender}',
-    '${req.body.PhoneNumber}',
-    ${req.body.UserID},
-    '${req.body.BranchNo}'
-    )`;
-
-    db.query(insertQuery, (err, _) => {
+    // Check for phone number already exists
+    const selectPhoneNoQuery = `SELECT * FROM STAFF WHERE PhoneNumber = '${req.body.PhoneNumber}'`;
+    db.query(selectPhoneNoQuery, (err, data: RowDataPacket[]) => {
       if (err) return res.status(500).json(err);
+      if (data.length) return res.status(409).json("Phone number already used in another account!");
 
-      res.status(201).json("Staff created!");
+      // create new staff in database
+      const insertQuery = `INSERT INTO STAFF VALUES (
+        '${req.body.StaffID}',
+        '${req.body.Name}',
+        '${req.body.Gender}',
+        '${req.body.PhoneNumber}',
+        ${req.body.UserID},
+        '${req.body.BranchNo}'
+        )`;
+
+      db.query(insertQuery, (err, _) => {
+        if (err) return res.status(500).json(err);
+
+        res.status(201).json("Staff created!");
+      });
     });
   });
 }

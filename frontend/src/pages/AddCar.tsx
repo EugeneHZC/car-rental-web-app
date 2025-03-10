@@ -10,8 +10,9 @@ const AddCar = () => {
   const [model, setModel] = useState("");
   const [colour, setColour] = useState("");
   const [pricePerDay, setPricePerDay] = useState(0);
-  const [status, setStatus] = useState("Good");
-  const [branchAddress, setBranchAddress] = useState("");
+  const [status, setStatus] = useState("default");
+  const [branchNo, setBranchNo] = useState("default");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const [branches, setBranches] = useState<Branch[]>([]);
 
@@ -21,25 +22,37 @@ const AddCar = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if (branchNo === "default") return alert("Please select a branch.");
+
+    if (status === "default") return alert("Please select the status of the car.");
+
+    setIsButtonClicked(true);
+
     const newCar: Car = {
       CarPlateNo: carPlateNo,
       Model: model,
       Colour: colour,
       Status: status,
       PricePerDay: pricePerDay,
-      BranchNo: branches.find((branch) => branch.Address === branchAddress)?.BranchNo ?? "",
+      BranchNo: branchNo,
     };
 
-    const { response, json } = await addCar(newCar);
+    const { response } = await addCar(newCar);
 
     if (response.ok) {
-      alert(json);
+      alert("Car added!");
+
       setCarPlateNo("");
       setModel("");
       setColour("");
       setPricePerDay(0);
+
       navigate("/");
+    } else {
+      alert("Oops! Something went wrong.");
     }
+
+    setIsButtonClicked(false);
   }
 
   async function fetchData() {
@@ -64,23 +77,30 @@ const AddCar = () => {
         <div className="form-container">
           <div className="input-section">
             <label htmlFor="car-model">Car Model</label>
-            <input type="text" name="car-model" value={model} onChange={(e) => setModel(e.target.value)} />
+            <input type="text" required name="car-model" value={model} onChange={(e) => setModel(e.target.value)} />
           </div>
 
           <div className="input-section">
             <label htmlFor="car-plate">Car Plate</label>
-            <input type="text" name="car-plate" value={carPlateNo} onChange={(e) => setCarPlateNo(e.target.value)} />
+            <input
+              type="text"
+              required
+              name="car-plate"
+              value={carPlateNo}
+              onChange={(e) => setCarPlateNo(e.target.value)}
+            />
           </div>
 
           <div className="input-section">
             <label htmlFor="car-colour">Car Colour</label>
-            <input type="text" name="car-colour" value={colour} onChange={(e) => setColour(e.target.value)} />
+            <input type="text" required name="car-colour" value={colour} onChange={(e) => setColour(e.target.value)} />
           </div>
 
           <div className="input-section">
             <label htmlFor="price-per-day">Price Per Day</label>
             <input
               type="number"
+              required
               name="price-per-day"
               value={pricePerDay}
               onChange={(e) => {
@@ -94,6 +114,9 @@ const AddCar = () => {
           <div className="input-section">
             <label htmlFor="car-status">Car Status</label>
             <select name="car-status" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="default" disabled>
+                --Select a status--
+              </option>
               <option value="Good">Good</option>
               <option value="Under Service">Under Service</option>
               <option value="Damaged">Damaged</option>
@@ -102,17 +125,20 @@ const AddCar = () => {
 
           <div className="input-section">
             <label htmlFor="branch">Branch</label>
-            <select name="branch" value={branchAddress} onChange={(e) => setBranchAddress(e.target.value)}>
+            <select name="branch" value={branchNo} onChange={(e) => setBranchNo(e.target.value)}>
+              <option value="default" disabled>
+                --Select a branch--
+              </option>
               {branches.map((branch) => (
-                <option key={branch.BranchNo} value={branch.Address}>
+                <option key={branch.BranchNo} value={branch.BranchNo}>
                   {branch.Address}
                 </option>
               ))}
             </select>
           </div>
 
-          <button className="btn-normal" type="submit">
-            Add
+          <button className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked} type="submit">
+            {isButtonClicked ? "Adding..." : "Add"}
           </button>
         </div>
       </fieldset>

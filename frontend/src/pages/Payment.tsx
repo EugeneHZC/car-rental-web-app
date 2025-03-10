@@ -8,6 +8,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 const Payment = () => {
   const [amountPaid, setAmountPaid] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("default");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -63,6 +64,8 @@ const Payment = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     if (!customer) return;
 
     if (amountPaid < totalPrice) return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
@@ -85,6 +88,7 @@ const Payment = () => {
 
           if (paymentResponse.ok && rentalResponse.ok) {
             alert("Payment successful!");
+            setIsButtonClicked(false);
             return navigate("/profile");
           }
         }
@@ -99,6 +103,8 @@ const Payment = () => {
   async function handlePayLaterClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     if (rentalId) {
       const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
@@ -106,6 +112,7 @@ const Payment = () => {
     }
 
     handleMakeRentAndPayment("", "Not Paid", "", 0);
+    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -187,10 +194,19 @@ const Payment = () => {
               </div>
 
               <div className="buttons">
-                <button className="btn-normal" type="submit">
+                <button
+                  className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                  disabled={isButtonClicked}
+                  type="submit"
+                >
                   Pay
                 </button>
-                <button className="btn-gray" type="button" onClick={handlePayLaterClicked}>
+                <button
+                  className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                  disabled={isButtonClicked}
+                  type="button"
+                  onClick={handlePayLaterClicked}
+                >
                   Pay Later
                 </button>
               </div>

@@ -28,7 +28,7 @@ export function createCar(req: Request, res: Response) {
 
   db.query(selectQuery, (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
-    if (data.length) return res.status(403).json("Car already exists!");
+    if (data.length) return res.status(409).json("Car already exists!");
 
     const insertQuery = `INSERT INTO CAR VALUES (
       '${req.body.CarPlateNo}',

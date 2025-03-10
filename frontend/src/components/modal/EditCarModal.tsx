@@ -22,6 +22,7 @@ const EditCarModal = ({
   const [status, setStatus] = useState(car.Status);
   const [pricePerDay, setPricePerDay] = useState(car.PricePerDay);
   const [branchAddress, setBranchAddress] = useState(currentCarBranch);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   function closeModal() {
     setOpenedModal("");
@@ -29,6 +30,8 @@ const EditCarModal = ({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    setIsButtonClicked(true);
 
     const updatedCar: Car = {
       CarPlateNo: car.CarPlateNo,
@@ -49,6 +52,8 @@ const EditCarModal = ({
     } else {
       alert("Oops! Something went wrong.");
     }
+
+    setIsButtonClicked(false);
   }
 
   return (
@@ -108,10 +113,19 @@ const EditCarModal = ({
             </div>
 
             <div className="buttons">
-              <button className="btn-normal" type="submit">
-                Save
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                disabled={isButtonClicked}
+                type="submit"
+              >
+                {isButtonClicked ? "Saving changes..." : "Save"}
               </button>
-              <button className="btn-gray" type="button" onClick={closeModal}>
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-gray"}
+                disabled={isButtonClicked}
+                type="button"
+                onClick={closeModal}
+              >
                 Close
               </button>
             </div>

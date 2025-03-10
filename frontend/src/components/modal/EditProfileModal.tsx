@@ -30,6 +30,8 @@ const EditProfileModal = ({
 
   const [branches, setBranches] = useState<Branch[]>([]);
 
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+
   function closeModal() {
     setOpenedModal("");
   }
@@ -46,6 +48,8 @@ const EditProfileModal = ({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    setIsButtonClicked(true);
 
     if (!user) return;
     if (!customer && !staff) return;
@@ -98,6 +102,8 @@ const EditProfileModal = ({
       localStorage.setItem(import.meta.env.VITE_LOCAL_STORAGE_KEY, JSON.stringify(updatedUser));
       closeModal();
     }
+
+    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -149,11 +155,20 @@ const EditProfileModal = ({
             )}
 
             <div className="buttons">
-              <button className="btn-normal" type="submit">
-                Save
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                disabled={isButtonClicked}
+                type="submit"
+              >
+                {isButtonClicked ? "Saving changes..." : "Save"}
               </button>
 
-              <button className="btn-gray" type="button" onClick={closeModal}>
+              <button
+                className={isButtonClicked ? "btn-disabled" : "btn-gray"}
+                disabled={isButtonClicked}
+                type="button"
+                onClick={closeModal}
+              >
                 Close
               </button>
             </div>

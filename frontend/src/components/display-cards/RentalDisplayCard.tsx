@@ -142,7 +142,6 @@ const RentalDisplayCard = ({
       if (user?.Role !== "Staff") return fetchCallback();
 
       await fetchUserData();
-      console.log(customerUser);
     } catch (e) {
       console.log(e);
     }

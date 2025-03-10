@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./modal.css";
 
 const ConfirmationModal = ({
@@ -11,6 +12,8 @@ const ConfirmationModal = ({
   content: string;
   dangerButtonText: string;
 }) => {
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+
   function closeModal() {
     setOpenedModal("");
   }
@@ -23,16 +26,24 @@ const ConfirmationModal = ({
 
         <div className="buttons">
           <button
-            className="btn-danger"
+            className={isButtonClicked ? "btn-disabled" : "btn-danger"}
+            disabled={isButtonClicked}
             type="button"
             onClick={() => {
-              closeModal();
+              setIsButtonClicked(true);
               handleCallback();
+              setIsButtonClicked(false);
+              closeModal();
             }}
           >
             {dangerButtonText}
           </button>
-          <button className="btn-gray" type="button" onClick={closeModal}>
+          <button
+            className={isButtonClicked ? "btn-disabled" : "btn-gray"}
+            disabled={isButtonClicked}
+            type="button"
+            onClick={closeModal}
+          >
             Back
           </button>
         </div>

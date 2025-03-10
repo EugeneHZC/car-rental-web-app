@@ -7,6 +7,7 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const navigate = useNavigate();
 
@@ -14,6 +15,8 @@ const Login = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    setIsButtonClicked(true);
 
     try {
       const { response, json } = await login(name, email, password);
@@ -41,6 +44,8 @@ const Login = () => {
       } else {
         alert(json);
       }
+
+      setIsButtonClicked(false);
     } catch (e) {
       console.log(e);
     }
@@ -85,8 +90,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn-normal">
-            Login
+          <button type="submit" className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked}>
+            {isButtonClicked ? "Logging in..." : "Login"}
           </button>
         </div>
       </fieldset>
