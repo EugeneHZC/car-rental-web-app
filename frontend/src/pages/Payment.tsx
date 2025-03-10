@@ -64,6 +64,8 @@ const Payment = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     if (!customer) return;
 
     if (amountPaid < totalPrice) return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
@@ -100,6 +102,8 @@ const Payment = () => {
   async function handlePayLaterClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     if (rentalId) {
       const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
@@ -118,7 +122,6 @@ const Payment = () => {
     <form
       className="payment-form"
       onSubmit={(e) => {
-        setIsButtonClicked(true);
         handleSubmit(e);
         setIsButtonClicked(false);
       }}

@@ -21,6 +21,8 @@ const Rent = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    setIsButtonClicked(true);
+
     // if user is not registered as customer, cannot make rent
     if (!customer)
       return alert("You must register as a customer first in order to rent a car. Go to profile page to do so.");
@@ -81,7 +83,6 @@ const Rent = () => {
     <form
       className="rent-form"
       onSubmit={(e) => {
-        setIsButtonClicked(true);
         handleSubmit(e);
         setIsButtonClicked(false);
       }}
