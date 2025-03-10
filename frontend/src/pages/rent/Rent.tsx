@@ -24,11 +24,16 @@ const Rent = () => {
     setIsButtonClicked(true);
 
     // if user is not registered as customer, cannot make rent
-    if (!customer)
+    if (!customer) {
+      setIsButtonClicked(false);
       return alert("You must register as a customer first in order to rent a car. Go to profile page to do so.");
+    }
 
     // check if datetime is valid, meaning drop off time will always be later than pick up date
-    if (pickUpTime.getTime() > dropOffTime.getTime()) return alert("Drop off date must be later than pick up date.");
+    if (pickUpTime.getTime() > dropOffTime.getTime()) {
+      setIsButtonClicked(false);
+      return alert("Drop off date must be later than pick up date.");
+    }
 
     const { json } = await getRentalsByCarPlate(car.CarPlateNo);
 
@@ -43,18 +48,25 @@ const Rent = () => {
         dropOffTime.getTime() >= occupiedPickUpTime.getTime() &&
         pickUpTime.getTime() <= occupiedDropOffTime.getTime()
       ) {
+        setIsButtonClicked(false);
         return alert("Oops! There is a crash in time for this car.");
       }
     }
 
     // check if the chosen time is later than the current time
     const currentTime = new Date();
-    if (pickUpTime.getTime() <= currentTime.getTime()) return alert("Pick up time must be later than current time.");
+    if (pickUpTime.getTime() <= currentTime.getTime()) {
+      setIsButtonClicked(false);
+      return alert("Pick up time must be later than current time.");
+    }
 
     const differenceInDays = Math.round((dropOffTime.getTime() - pickUpTime.getTime()) / (1000 * 60 * 60 * 24));
 
     // check if their difference is at least one day for price calculation
-    if (differenceInDays < 1) return alert("Drop off time must be at least one day difference from pick up time.");
+    if (differenceInDays < 1) {
+      setIsButtonClicked(false);
+      return alert("Drop off time must be at least one day difference from pick up time.");
+    }
 
     const totalPrice = car.PricePerDay * differenceInDays;
 
@@ -80,13 +92,7 @@ const Rent = () => {
   }, [user]);
 
   return (
-    <form
-      className="rent-form"
-      onSubmit={(e) => {
-        handleSubmit(e);
-        setIsButtonClicked(false);
-      }}
-    >
+    <form className="rent-form" onSubmit={handleSubmit}>
       <fieldset>
         <legend>Rent</legend>
         <div className="car-details-container">

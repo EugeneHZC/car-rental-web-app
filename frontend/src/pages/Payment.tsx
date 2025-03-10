@@ -56,6 +56,8 @@ const Payment = () => {
       if (rentalResponse.ok && paymentResponse.ok) {
         navigate("/");
       }
+
+      setIsButtonClicked(false);
     } catch (e) {
       console.log(e);
     }
@@ -66,11 +68,19 @@ const Payment = () => {
 
     setIsButtonClicked(true);
 
-    if (!customer) return;
+    if (!customer) {
+      return setIsButtonClicked(false);
+    }
 
-    if (amountPaid < totalPrice) return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
+    if (amountPaid < totalPrice) {
+      setIsButtonClicked(false);
+      return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
+    }
 
-    if (paymentMethod === "default") return alert("Please choose a payment method.");
+    if (paymentMethod === "default") {
+      setIsButtonClicked(false);
+      return alert("Please choose a payment method.");
+    }
 
     try {
       if (rentalId) {
@@ -88,6 +98,7 @@ const Payment = () => {
 
           if (paymentResponse.ok && rentalResponse.ok) {
             alert("Payment successful!");
+            setIsButtonClicked(false);
             return navigate("/profile");
           }
         }
@@ -107,10 +118,14 @@ const Payment = () => {
     if (rentalId) {
       const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
-      if (existingPayment.length !== 0) return navigate("/profile");
+      if (existingPayment.length !== 0) {
+        setIsButtonClicked(false);
+        return navigate("/profile");
+      }
     }
 
     handleMakeRentAndPayment("", "Not Paid", "", 0);
+    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -119,13 +134,7 @@ const Payment = () => {
   }, [user, customer]);
 
   return (
-    <form
-      className="payment-form"
-      onSubmit={(e) => {
-        handleSubmit(e);
-        setIsButtonClicked(false);
-      }}
-    >
+    <form className="payment-form" onSubmit={handleSubmit}>
       <fieldset>
         <legend>Payment</legend>
 
@@ -206,14 +215,10 @@ const Payment = () => {
                   {isButtonClicked ? "Processing..." : "Pay"}
                 </button>
                 <button
-                  className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+                  className={isButtonClicked ? "btn-disabled" : "btn-gray"}
                   disabled={isButtonClicked}
                   type="button"
-                  onClick={(e) => {
-                    setIsButtonClicked(true);
-                    handlePayLaterClicked(e);
-                    setIsButtonClicked(false);
-                  }}
+                  onClick={handlePayLaterClicked}
                 >
                   Pay Later
                 </button>
