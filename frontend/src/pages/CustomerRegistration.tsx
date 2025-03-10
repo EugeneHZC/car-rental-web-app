@@ -15,6 +15,7 @@ const CustomerRegistration = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [licenseNumber, setLicenseNumber] = useState(0);
   const [address, setAddress] = useState("");
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const { dispatch } = useCustomerContext();
 
@@ -22,6 +23,8 @@ const CustomerRegistration = () => {
     e.preventDefault();
 
     if (!user || !name) return;
+
+    setIsButtonClicked(true);
 
     try {
       const { response, json } = await createCustomer(
@@ -55,10 +58,14 @@ const CustomerRegistration = () => {
         });
 
         navigate("/profile");
+      } else {
+        alert("Oops! Something went wrong.");
       }
     } catch (e) {
       console.log(e);
     }
+
+    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -136,8 +143,8 @@ const CustomerRegistration = () => {
             ></textarea>
           </div>
 
-          <button type="submit" className="btn-normal">
-            Register
+          <button type="submit" disabled={isButtonClicked} className={isButtonClicked ? "btn-disabled" : "btn-normal"}>
+            {isButtonClicked ? "Registering..." : "Register"}
           </button>
         </div>
       </fieldset>

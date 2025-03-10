@@ -42,10 +42,10 @@ const EditCarModal = ({
       BranchNo: branches.find((branch) => branch.Address === branchAddress)?.BranchNo ?? "",
     };
 
-    const { response, json } = await updateCar(updatedCar);
+    const { response } = await updateCar(updatedCar);
 
     if (response.ok) {
-      alert(json);
+      alert("Car updated!");
       fetchCarCallback();
       fetchBranchCallback(); // to fetch the branch for the updated car so that the branch address will change
       closeModal();

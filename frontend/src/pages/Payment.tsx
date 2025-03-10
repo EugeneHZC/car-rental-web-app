@@ -64,8 +64,6 @@ const Payment = () => {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    setIsButtonClicked(true);
-
     if (!customer) return;
 
     if (amountPaid < totalPrice) return alert(`Amount is not enough. Total price is RM ${totalPrice}`);
@@ -88,7 +86,6 @@ const Payment = () => {
 
           if (paymentResponse.ok && rentalResponse.ok) {
             alert("Payment successful!");
-            setIsButtonClicked(false);
             return navigate("/profile");
           }
         }
@@ -103,8 +100,6 @@ const Payment = () => {
   async function handlePayLaterClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
 
-    setIsButtonClicked(true);
-
     if (rentalId) {
       const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
@@ -112,7 +107,6 @@ const Payment = () => {
     }
 
     handleMakeRentAndPayment("", "Not Paid", "", 0);
-    setIsButtonClicked(false);
   }
 
   useEffect(() => {
@@ -121,7 +115,14 @@ const Payment = () => {
   }, [user, customer]);
 
   return (
-    <form className="payment-form" onSubmit={handleSubmit}>
+    <form
+      className="payment-form"
+      onSubmit={(e) => {
+        setIsButtonClicked(true);
+        handleSubmit(e);
+        setIsButtonClicked(false);
+      }}
+    >
       <fieldset>
         <legend>Payment</legend>
 
@@ -199,13 +200,17 @@ const Payment = () => {
                   disabled={isButtonClicked}
                   type="submit"
                 >
-                  Pay
+                  {isButtonClicked ? "Processing..." : "Pay"}
                 </button>
                 <button
                   className={isButtonClicked ? "btn-disabled" : "btn-normal"}
                   disabled={isButtonClicked}
                   type="button"
-                  onClick={handlePayLaterClicked}
+                  onClick={(e) => {
+                    setIsButtonClicked(true);
+                    handlePayLaterClicked(e);
+                    setIsButtonClicked(false);
+                  }}
                 >
                   Pay Later
                 </button>

@@ -32,8 +32,8 @@ const ConfirmationModal = ({
             onClick={() => {
               setIsButtonClicked(true);
               handleCallback();
-              setIsButtonClicked(false);
               closeModal();
+              setIsButtonClicked(false);
             }}
           >
             {dangerButtonText}

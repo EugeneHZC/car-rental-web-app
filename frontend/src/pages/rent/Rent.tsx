@@ -9,6 +9,7 @@ import { useAuthContext } from "../../hooks/useAuthContext";
 const Rent = () => {
   const [pickUpTime, setPickUpTime] = useState<Date>(new Date());
   const [dropOffTime, setDropOffTime] = useState<Date>(new Date());
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,7 +78,14 @@ const Rent = () => {
   }, [user]);
 
   return (
-    <form className="rent-form" onSubmit={handleSubmit}>
+    <form
+      className="rent-form"
+      onSubmit={(e) => {
+        setIsButtonClicked(true);
+        handleSubmit(e);
+        setIsButtonClicked(false);
+      }}
+    >
       <fieldset>
         <legend>Rent</legend>
         <div className="car-details-container">
@@ -134,8 +142,8 @@ const Rent = () => {
             </div>
           </div>
 
-          <button className="btn-normal" type="submit">
-            Rent
+          <button className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked} type="submit">
+            {isButtonClicked ? "Processing..." : "Rent"}
           </button>
         </div>
       </fieldset>
