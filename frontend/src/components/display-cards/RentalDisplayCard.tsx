@@ -21,8 +21,8 @@ const RentalDisplayCard = ({
   staffBranchNo: string | null;
   fetchCallback: () => {};
 }) => {
-  const [car, setCar] = useState<Car>();
-  const [branch, setBranch] = useState<Branch>();
+  const [car, setCar] = useState<Car | null>(null);
+  const [branch, setBranch] = useState<Branch | null>(null);
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
   const [payment, setPayment] = useState<Payment | null>(null);
 
@@ -32,6 +32,8 @@ const RentalDisplayCard = ({
   const { user } = useAuthContext();
 
   const navigate = useNavigate();
+
+  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
   const formattedRentalDate = new Date(
     new Date(rental.RentalDate).getTime() - new Date(rental.RentalDate).getTimezoneOffset() * 60000
@@ -174,8 +176,6 @@ const RentalDisplayCard = ({
       fetchCallback();
     }
   }, [customerUser]);
-
-  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
   return (
     <div className="card-container">
