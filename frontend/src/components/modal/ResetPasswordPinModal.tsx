@@ -13,7 +13,7 @@ const ResetPasswordPinModal = ({
 }) => {
   const [sixDigitPin, setSixDigitPin] = useState<string>("");
   const randomResetPin = useRef(Math.floor(Math.random() * Math.pow(10, 6)));
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout>(null);
   const [pinValidTime, setPinValidTime] = useState(60);
 
   function handleVerifyClicked(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
