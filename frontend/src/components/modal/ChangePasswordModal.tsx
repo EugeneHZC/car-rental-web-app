@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { updateUserPassword } from "../../api/auth";
+import { updateUserForgottenPassword, updateUserPassword } from "../../api/auth";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./modal.css";
 
 const ChangePasswordModal = ({
   setOpenedModal,
+  isLoggedIn,
+  email,
 }: {
   setOpenedModal: React.Dispatch<"edit-profile" | "change-password" | "">;
+  isLoggedIn: boolean;
+  email?: string;
 }) => {
   const { user } = useAuthContext();
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
   function closeModal() {
@@ -21,11 +26,15 @@ const ChangePasswordModal = ({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!user) return;
+    if (isLoggedIn && !user) return;
+
+    if (newPassword !== confirmPassword) return alert("New password and confirm password must be the same.");
 
     setIsButtonClicked(true);
 
-    const { response, json } = await updateUserPassword(oldPassword, newPassword, user.UserID);
+    const { response, json } = isLoggedIn
+      ? await updateUserPassword(oldPassword, newPassword, user?.UserID ?? 0)
+      : await updateUserForgottenPassword(email ?? "", newPassword);
 
     if (response.ok) {
       alert("Password changed!");
@@ -40,19 +49,21 @@ const ChangePasswordModal = ({
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <form onSubmit={handleSubmit} className="edit-profile-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-container">
             <h2>Change Password</h2>
-            <div className="input-section">
-              <label htmlFor="old-password">Old Password</label>
-              <input
-                type="password"
-                name="old-password"
-                required
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-              />
-            </div>
+            {isLoggedIn && (
+              <div className="input-section">
+                <label htmlFor="old-password">Old Password</label>
+                <input
+                  type="password"
+                  name="old-password"
+                  required
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                />
+              </div>
+            )}
 
             <div className="input-section">
               <label htmlFor="new-password">New Password</label>
@@ -62,6 +73,17 @@ const ChangePasswordModal = ({
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="input-section">
+              <label htmlFor="confirm-password">Confirm Password</label>
+              <input
+                type="password"
+                name="confirm-password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
 

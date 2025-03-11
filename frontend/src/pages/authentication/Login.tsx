@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { login } from "../../api/auth";
+import "./auth.css";
+import ResetPasswordPinModal from "../../components/modal/ResetPasswordPinModal";
+import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 
 const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [openedModal, setOpenedModal] = useState("");
+
+  // for users who forgotten their passwords
+  const [recoverEmail, setRecoverEmail] = useState("");
 
   const navigate = useNavigate();
 
@@ -51,51 +58,87 @@ const Login = () => {
     }
   }
 
+  async function handleForgotPasswordClicked() {
+    setRecoverEmail("");
+    setOpenedModal("reset-pin");
+  }
+
   useEffect(() => {
     if (user) navigate("/");
   }, [user]);
 
   return (
-    <form className="login-form" onSubmit={handleSubmit}>
-      <fieldset>
-        <legend>Login</legend>
+    <>
+      {openedModal === "reset-pin" && (
+        <ResetPasswordPinModal setOpenedModal={setOpenedModal} email={recoverEmail} setEmail={setRecoverEmail} />
+      )}
+      {openedModal === "reset-password" && (
+        <ChangePasswordModal setOpenedModal={setOpenedModal} isLoggedIn={false} email={recoverEmail} />
+      )}
+      <form className="login-form" onSubmit={handleSubmit}>
+        <fieldset>
+          <legend>Login</legend>
 
-        <div className="form-container">
-          <div className="input-section">
-            <label htmlFor="name">Full Name</label>
-            <input type="text" id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} required />
+          <div className="form-container">
+            <div className="input-section">
+              <label htmlFor="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="input-section">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="input-section">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="forgot-password-tag">
+              <Link to="/login" onClick={handleForgotPasswordClicked}>
+                Forgot your password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              className={isButtonClicked ? "btn-disabled" : "btn-normal"}
+              disabled={isButtonClicked}
+            >
+              {isButtonClicked ? "Logging in..." : "Login"}
+            </button>
+
+            <div className="form-footer">
+              <p>
+                No account? <Link to="/register">Register</Link>
+              </p>
+            </div>
           </div>
-
-          <div className="input-section">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="input-section">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked}>
-            {isButtonClicked ? "Logging in..." : "Login"}
-          </button>
-        </div>
-      </fieldset>
-    </form>
+        </fieldset>
+      </form>
+    </>
   );
 };
 

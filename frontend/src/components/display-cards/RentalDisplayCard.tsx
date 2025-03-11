@@ -33,8 +33,6 @@ const RentalDisplayCard = ({
 
   const navigate = useNavigate();
 
-  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
-
   const formattedRentalDate = new Date(
     new Date(rental.RentalDate).getTime() - new Date(rental.RentalDate).getTimezoneOffset() * 60000
   )
@@ -165,17 +163,24 @@ const RentalDisplayCard = ({
 
   useEffect(() => {
     if (customerUser) {
-      sendEmail(
-        customerUser?.Name ?? "",
-        customerUser?.Email ?? "",
-        user?.Name ?? "",
-        user?.Email ?? "",
-        rental.RentalDate.replace("T", " ").slice(0, 19)
-      );
+      sendEmail({
+        service_id: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        template_id: import.meta.env.VITE_EMAILJS_CANCEL_RENTAL_TEMPLATE_ID,
+        user_id: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        template_params: {
+          customer_name: customerUser?.Name,
+          customer_email: customerUser?.Email,
+          staff_name: user?.Name,
+          staff_email: user?.Email,
+          rental_date: rental.RentalDate.replace("T", " ").slice(0, 19),
+        },
+      });
 
       fetchCallback();
     }
   }, [customerUser]);
+
+  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
   return (
     <div className="card-container">

@@ -5,6 +5,7 @@ import { deleteUser, login, register } from "../../api/auth";
 import { Branch, Staff } from "../../types";
 import { getAllBranches } from "../../api/branch";
 import { createStaff } from "../../api/staff";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -28,18 +29,12 @@ const Register = () => {
     if (response.ok) setAvailableBranches(json);
   }
 
-  async function handleCustomerSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    setIsButtonClicked(true);
+    if (password !== confirmPassword) return alert("Password and confirm password must be the same!");
 
-    if (password !== confirmPassword) {
-      alert("Password and confirm password must be the same!");
-      setPassword("");
-      setConfirmPassword("");
-      setIsButtonClicked(false);
-      return;
-    }
+    setIsButtonClicked(true);
 
     try {
       // create a user
@@ -102,7 +97,7 @@ const Register = () => {
   }, [user]);
 
   return (
-    <form className="register-form" onSubmit={handleCustomerSubmit}>
+    <form className="register-form" onSubmit={handleSubmit}>
       <fieldset>
         <legend>Register</legend>
 
@@ -219,6 +214,12 @@ const Register = () => {
           <button type="submit" className={isButtonClicked ? "btn-disabled" : "btn-normal"} disabled={isButtonClicked}>
             {isButtonClicked ? "Registering..." : "Register"}
           </button>
+
+          <div className="form-footer">
+            <p>
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          </div>
         </div>
       </fieldset>
     </form>

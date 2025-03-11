@@ -54,6 +54,20 @@ export async function updateUserPassword(oldPassword: string, newPassword: strin
   return { response, json };
 }
 
+export async function updateUserForgottenPassword(email: string, newPassword: string) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/update/forgot-password`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, newPassword }),
+  });
+
+  const json = await response.json();
+
+  return { response, json };
+}
+
 export async function deleteUser(userId: number) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/delete/${userId}`, {
     method: "DELETE",

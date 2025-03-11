@@ -117,7 +117,7 @@ const Profile = () => {
       {openedModal === "edit-profile" && (
         <EditProfileModal setOpenedModal={setOpenedModal} currentStaffBranch={branch?.Address ?? ""} />
       )}
-      {openedModal === "change-password" && <ChangePasswordModal setOpenedModal={setOpenedModal} />}
+      {openedModal === "change-password" && <ChangePasswordModal setOpenedModal={setOpenedModal} isLoggedIn={true} />}
       {openedModal === "delete-profile" && (
         <ConfirmationModal
           setOpenedModal={setOpenedModal}
