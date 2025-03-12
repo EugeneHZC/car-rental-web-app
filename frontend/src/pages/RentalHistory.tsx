@@ -1,39 +1,65 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import { Rental } from "../types";
-import { getAllRentals } from "../api/rental";
+import { Car, Rental } from "../types";
+import { getRentalsByBranchNo, getRentalsByNRIC } from "../api/rental";
 import RentalDisplayCard from "../components/display-cards/RentalDisplayCard";
 import { useStaffContext } from "../hooks/useStaffContext";
+import { getAllCars } from "../api/car";
+import { useCustomerContext } from "../hooks/useCustomerContext";
 
 const RentalHistory = () => {
   const { user } = useAuthContext();
   const { staff } = useStaffContext();
+  const { customer } = useCustomerContext();
 
   const [rentals, setRentals] = useState<Rental[]>([]);
+  const [cars, setCars] = useState<Car[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
-  async function fetchData() {
+  async function fetchRentalData() {
     setIsLoading(true);
 
-    const { response, json } = await getAllRentals();
+    if (user?.Role === "Customer") {
+      if (!customer) return;
+      const { response, json } = await getRentalsByNRIC(customer.NRIC);
 
-    if (response.ok && json.length) {
-      setRentals(json);
+      if (response.ok && json.length) setRentals(json);
+      else setRentals([]);
     } else {
-      setRentals([]);
+      if (!staff) return;
+
+      const { response, json } = await getRentalsByBranchNo(staff.BranchNo);
+
+      if (response.ok && json.length) setRentals(json);
+      else setRentals([]);
     }
 
     setIsLoading(false);
   }
 
+  async function fetchCarData() {
+    try {
+      const { json: carData } = await getAllCars();
+
+      if (carData) {
+        setCars(carData);
+      } else {
+        setCars([]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
     if (!user) navigate("/login");
 
-    fetchData();
+    fetchRentalData();
+    fetchCarData();
   }, []);
 
   return (
@@ -44,14 +70,21 @@ const RentalHistory = () => {
         <p className="loading-message">No rentals made yet...</p>
       ) : (
         <div className="cards">
-          {rentals.map((rental) => (
-            <RentalDisplayCard
-              key={rental.RentalID}
-              rental={rental}
-              staffBranchNo={staff?.BranchNo ?? ""}
-              fetchCallback={fetchData}
-            />
-          ))}
+          {rentals.map((rental) => {
+            const car = cars.find((car) => car.CarPlateNo === rental.CarPlateNo);
+
+            return (
+              car && (
+                <RentalDisplayCard
+                  key={rental.RentalID}
+                  rental={rental}
+                  car={car}
+                  staffBranchNo={car.BranchNo}
+                  fetchCallback={fetchRentalData}
+                />
+              )
+            );
+          })}
         </div>
       )}
     </>

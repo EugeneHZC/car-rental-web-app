@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Branch, Car, Customer, Payment, Rental, User } from "../../types";
 import { useNavigate } from "react-router-dom";
-import { getCarByCarPlate } from "../../api/car";
 import { getBranchByBranchNo } from "../../api/branch";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./display-card.css";
@@ -14,16 +13,19 @@ import { sendEmail } from "../../api/email";
 
 const RentalDisplayCard = ({
   rental,
+  car,
   staffBranchNo,
+  branchAddress,
   fetchCallback,
 }: {
   rental: Rental;
-  staffBranchNo: string | null;
+  car: Car;
+  staffBranchNo: string;
+  branchAddress?: string;
   fetchCallback: () => {};
 }) => {
-  const [car, setCar] = useState<Car | null>(null);
-  const [branch, setBranch] = useState<Branch | null>(null);
   const [rentalCustomer, setRentalCustomer] = useState<Customer | null>(null);
+  const [branch, setBranch] = useState<Branch | null>(null);
   const [payment, setPayment] = useState<Payment | null>(null);
 
   const [customerUser, setCustomerUser] = useState<User | null>(null);
@@ -75,27 +77,13 @@ const RentalDisplayCard = ({
     });
   }
 
-  async function fetchCarData() {
-    try {
-      const { json: carData } = await getCarByCarPlate(rental.CarPlateNo);
-
-      if (carData) {
-        setCar(carData);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   async function fetchBranchData() {
-    if (!car) return;
+    if (branchAddress) return;
 
     try {
-      const { json: branchData } = await getBranchByBranchNo(car.BranchNo);
+      const { json: branchData } = await getBranchByBranchNo(staffBranchNo);
 
-      if (branchData) {
-        setBranch(branchData);
-      }
+      if (branchData) setBranch(branchData);
     } catch (e) {
       console.log(e);
     }
@@ -152,14 +140,10 @@ const RentalDisplayCard = ({
   }
 
   useEffect(() => {
-    fetchCarData();
+    fetchBranchData();
     fetchCustomerData();
     fetchPaymentData();
   }, []);
-
-  useEffect(() => {
-    fetchBranchData();
-  }, [car]);
 
   useEffect(() => {
     if (customerUser) {
@@ -179,8 +163,6 @@ const RentalDisplayCard = ({
       fetchCallback();
     }
   }, [customerUser]);
-
-  if (staffBranchNo && car && car.BranchNo !== staffBranchNo) return null;
 
   return (
     <div className="card-container">
@@ -209,7 +191,7 @@ const RentalDisplayCard = ({
         </div>
         <div className="rental-info">
           <p className="rental-info-title">Branch Address: </p>
-          <p className="rental-info-content">{branch?.Address}</p>
+          <p className="rental-info-content">{branchAddress ? branchAddress : branch?.Address}</p>
         </div>
 
         <div className="break-line" />

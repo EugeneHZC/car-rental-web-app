@@ -40,6 +40,18 @@ export function getRentalsByNRIC(req: Request, res: Response) {
   });
 }
 
+export function getRentalsByBranchNo(req: Request, res: Response) {
+  const query = `SELECT * FROM RENTAL WHERE CarPlateNo IN (
+    SELECT CarPlateNo FROM CAR WHERE BranchNo = '${req.params.branchNo}'
+  )`;
+
+  db.query(query, (err, data: RowDataPacket[]) => {
+    if (err) return res.status(500).json(err);
+
+    res.status(200).json(data);
+  });
+}
+
 export function getRentalByNRICAndCarPlate(req: Request, res: Response) {
   const query = `SELECT * FROM RENTAL WHERE NRIC = '${req.params.nric}' AND CarPlateNo = '${req.params.carPlateNo}'`;
 

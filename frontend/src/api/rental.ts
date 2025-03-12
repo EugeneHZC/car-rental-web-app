@@ -38,7 +38,14 @@ export async function getRentalsByNRIC(nric: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/rentals/nric/${nric}`);
   const json = await response.json();
 
-  return { json };
+  return { response, json };
+}
+
+export async function getRentalsByBranchNo(branchNo: string) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/rentals/branchNo/${branchNo}`);
+  const json = await response.json();
+
+  return { response, json };
 }
 
 export async function getRentalsByCarPlate(carPlateNo: string) {

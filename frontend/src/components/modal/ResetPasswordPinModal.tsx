@@ -29,7 +29,7 @@ const ResetPasswordPinModal = ({
   }
 
   function startTimer() {
-    setPinValidTime(10);
+    setPinValidTime(60);
 
     intervalRef.current = setInterval(() => {
       // get the latest state

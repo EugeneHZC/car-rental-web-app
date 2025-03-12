@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import "./profile.css";
 import RentalDisplayCard from "../../components/display-cards/RentalDisplayCard";
 import { useCustomerContext } from "../../hooks/useCustomerContext";
-import { Branch, Rental } from "../../types";
-import { getAllRentals, getRentalsByNRIC } from "../../api/rental";
+import { Branch, Car, Rental } from "../../types";
+import { getRentalsByBranchNo, getRentalsByNRIC } from "../../api/rental";
 import EditProfileModal from "../../components/modal/EditProfileModal";
 import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
@@ -13,6 +13,7 @@ import { getBranchByBranchNo } from "../../api/branch";
 import ConfirmationModal from "../../components/modal/ConfirmationModal";
 // import { deleteCustomer } from "../../api/customer";
 import { deleteUser } from "../../api/auth";
+import { getAllCars } from "../../api/car";
 // import { deleteStaff } from "../../api/staff";
 
 const SMALL_SCREEN_SIZE = 700;
@@ -20,8 +21,9 @@ const SMALL_SCREEN_SIZE = 700;
 const Profile = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [openedModal, setOpenedModal] = useState<string>("");
-  // for staff only
-  const [branch, setBranch] = useState<Branch | null>(null);
+
+  const [branch, setBranch] = useState<Branch | null>(null); // for staff only
+  const [cars, setCars] = useState<Car[]>([]);
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -55,7 +57,7 @@ const Profile = () => {
     setOpenedModal("delete-profile");
   }
 
-  async function fetchData() {
+  async function fetchRentalData() {
     setIsLoading(true);
 
     try {
@@ -63,28 +65,30 @@ const Profile = () => {
         // get rentals for customer based on nric
         if (!customer) return;
 
-        const { json } = await getRentalsByNRIC(customer?.NRIC);
-        if (json.length) setRentals(json);
+        const { response, json } = await getRentalsByNRIC(customer.NRIC);
+        if (response.ok && json.length) setRentals(json);
         else setRentals([]);
       } else {
-        // get branch address and all rentals for staff
+        // get rentals to be filtered through staff branch
         if (!staff) return;
 
-        const { response: branchResponse, json: branchData } = await getBranchByBranchNo(staff?.BranchNo);
-        if (branchResponse.ok && branchData) setBranch(branchData);
-
-        const { response: rentalsResponse, json } = await getAllRentals();
-        if (rentalsResponse.ok && json.length) {
-          setRentals(json);
-        } else {
-          setRentals([]);
-        }
+        const { response, json } = await getRentalsByBranchNo(staff.BranchNo);
+        if (response.ok && json.length) setRentals(json);
+        else setRentals([]);
       }
 
       setIsLoading(false);
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async function fetchBranchData() {
+    // get branch address and all rentals for staff
+    if (!staff) return;
+
+    const { response: branchResponse, json: branchData } = await getBranchByBranchNo(staff?.BranchNo);
+    if (branchResponse.ok && branchData) setBranch(branchData);
   }
 
   async function handleDeleteProfile() {
@@ -98,11 +102,23 @@ const Profile = () => {
     localStorage.removeItem(import.meta.env.VITE_LOCAL_STORAGE_KEY);
   }
 
+  async function fetchCarData() {
+    try {
+      const { json: carData } = await getAllCars();
+
+      if (carData) setCars(carData);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   useEffect(() => {
     if (!user) navigate("/login");
 
     setRentals([]);
-    fetchData();
+    fetchRentalData();
+    fetchCarData();
+    fetchBranchData();
 
     // generates the current time to filter out past rents made
     setCurrentTime(new Date());
@@ -211,14 +227,22 @@ const Profile = () => {
 
                 return currentTime.getTime() <= rentalDropOffTime.getTime();
               })
-              .map((rental) => (
-                <RentalDisplayCard
-                  rental={rental}
-                  key={rental.RentalID}
-                  staffBranchNo={staff?.BranchNo ?? ""}
-                  fetchCallback={fetchData}
-                />
-              ))}
+              .map((rental) => {
+                const car = cars.find((car) => car.CarPlateNo === rental.CarPlateNo);
+
+                return (
+                  car && (
+                    <RentalDisplayCard
+                      rental={rental}
+                      key={rental.RentalID}
+                      car={car}
+                      staffBranchNo={car.BranchNo}
+                      branchAddress={branch?.Address}
+                      fetchCallback={fetchRentalData}
+                    />
+                  )
+                );
+              })}
           </div>
         )}
       </div>
