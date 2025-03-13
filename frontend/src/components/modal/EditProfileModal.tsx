@@ -113,7 +113,7 @@ const EditProfileModal = ({
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-container">
             <h2>Edit Profile</h2>
             <div className="input-section">

@@ -28,6 +28,17 @@ export async function addCar(car: Car) {
   return { response, json };
 }
 
+export async function uploadCarImage(carPlateNo: string, formData: FormData) {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/upload/${carPlateNo}`, {
+    method: "PATCH",
+    body: formData,
+  });
+
+  const json = await response.json();
+
+  return { response, json };
+}
+
 export async function removeCar(carPlateNo: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/remove/${carPlateNo}`, { method: "DELETE" });
 

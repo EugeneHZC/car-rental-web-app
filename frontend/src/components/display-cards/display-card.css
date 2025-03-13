@@ -1,6 +1,7 @@
 .card-container {
   padding: 0 20px 20px;
-  border: 2px solid black;
+  /* border: 2px solid black; */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -43,4 +44,10 @@
 .car-model {
   height: 20px;
   font-size: x-large;
+}
+
+.car-image {
+  width: auto;
+  height: 200px;
+  margin: 0 auto;
 }

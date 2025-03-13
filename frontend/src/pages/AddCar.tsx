@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
-import { addCar } from "../api/car";
+import { addCar, uploadCarImage } from "../api/car";
 import { Branch, Car } from "../types";
 import { getAllBranches } from "../api/branch";
 
@@ -11,6 +11,7 @@ const AddCar = () => {
   const [colour, setColour] = useState("");
   const [pricePerDay, setPricePerDay] = useState(0);
   const [status, setStatus] = useState("default");
+  const [carImage, setCarImage] = useState<File | null>(null);
   const [branchNo, setBranchNo] = useState("default");
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -26,7 +27,12 @@ const AddCar = () => {
 
     if (status === "default") return alert("Please select the status of the car.");
 
+    if (!carImage) return alert("Please upload an image of the car.");
+
     setIsButtonClicked(true);
+
+    const formData = new FormData();
+    formData.append("car-image", carImage);
 
     const newCar: Car = {
       CarPlateNo: carPlateNo,
@@ -34,12 +40,14 @@ const AddCar = () => {
       Colour: colour,
       Status: status,
       PricePerDay: pricePerDay,
+      Image: "",
       BranchNo: branchNo,
     };
 
-    const { response } = await addCar(newCar);
+    const { response: carResponse } = await addCar(newCar);
+    const { response: imageResponse } = await uploadCarImage(carPlateNo, formData);
 
-    if (response.ok) {
+    if (carResponse.ok && imageResponse.ok) {
       alert("Car added!");
 
       setCarPlateNo("");
@@ -61,6 +69,16 @@ const AddCar = () => {
     if (response.ok && json.length) {
       setBranches(json);
     }
+  }
+
+  function handleUploadImage(e: React.FormEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement & {
+      files: FileList;
+    };
+
+    setCarImage(target.files[0]);
   }
 
   useEffect(() => {
@@ -121,6 +139,11 @@ const AddCar = () => {
               <option value="Under Service">Under Service</option>
               <option value="Damaged">Damaged</option>
             </select>
+          </div>
+
+          <div className="input-section">
+            <label htmlFor="car-image">Car Image</label>
+            <input type="file" required name="car-image" onChange={handleUploadImage} />
           </div>
 
           <div className="input-section">

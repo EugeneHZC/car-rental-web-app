@@ -49,7 +49,7 @@ const ChangePasswordModal = ({
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-container">
             <h2>Change Password</h2>
             {isLoggedIn && (

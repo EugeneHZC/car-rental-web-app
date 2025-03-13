@@ -15,6 +15,7 @@ body::-webkit-scrollbar {
 form {
   display: flex;
   justify-content: center;
+  margin-top: 50px;
 }
 
 .form-container {
@@ -60,12 +61,18 @@ select {
   transition: border 0.3s ease-in-out;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 400;
+  display: flex;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+input[type="file"],
+input[type="file"]:focus {
+  border: none;
 }
 
 textarea {
@@ -127,7 +134,8 @@ select:focus {
 }
 
 /* BUTTON */
-button {
+button,
+input::-webkit-file-upload-button {
   border-radius: 50px;
   font-size: large;
   cursor: pointer;
@@ -144,16 +152,17 @@ button {
   margin: 10px 0;
 }
 
-.btn-normal {
+.btn-normal,
+input::-webkit-file-upload-button {
   background-color: #007bff;
   border-color: #0056b3;
   transition: 0.3s;
 }
 
-.btn-disabled {
-  background-color: #d6d6d6;
-  border-color: #c0c0c0;
-  color: #a0a0a0;
+.btn-normal:hover,
+input::-webkit-file-upload-button:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
   transition: 0.3s;
 }
 
@@ -176,10 +185,18 @@ button {
   background-color: #545b62;
 }
 
-.btn-normal:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+.btn-disabled {
+  background-color: #d6d6d6;
+  border-color: #c0c0c0;
+  color: #a0a0a0;
   transition: 0.3s;
+}
+
+input::-webkit-file-upload-button {
+  font-size: 15px;
+  margin-right: 10px;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .break-line {

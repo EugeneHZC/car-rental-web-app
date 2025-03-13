@@ -11,6 +11,7 @@ export type Car = {
   Colour: string;
   Status: string;
   PricePerDay: number;
+  Image: string;
   BranchNo: string;
 };
 

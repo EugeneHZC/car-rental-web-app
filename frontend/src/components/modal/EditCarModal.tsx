@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Branch, Car } from "../../types";
-import { updateCar } from "../../api/car";
+import { updateCar, uploadCarImage } from "../../api/car";
 import "./modal.css";
 
 const EditCarModal = ({
@@ -21,6 +21,7 @@ const EditCarModal = ({
   const [colour, setColour] = useState(car.Colour);
   const [status, setStatus] = useState(car.Status);
   const [pricePerDay, setPricePerDay] = useState(car.PricePerDay);
+  const [carImage, setCarImage] = useState<File | null>(null);
   const [branchAddress, setBranchAddress] = useState(currentCarBranch);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
@@ -40,11 +41,21 @@ const EditCarModal = ({
       PricePerDay: pricePerDay,
       Status: status,
       BranchNo: branches.find((branch) => branch.Address === branchAddress)?.BranchNo ?? "",
+      Image: "",
     };
 
-    const { response } = await updateCar(updatedCar);
+    const { response: carResponse } = await updateCar(updatedCar);
 
-    if (response.ok) {
+    if (carImage) {
+      const formData = new FormData();
+      formData.append("car-image", carImage);
+
+      const { response: imageResponse } = await uploadCarImage(car.CarPlateNo, formData);
+
+      if (!imageResponse.ok) return alert("Oops! Something went wrong while trying to upload your image.");
+    }
+
+    if (carResponse.ok) {
       alert("Car updated!");
       fetchCarCallback();
       fetchBranchCallback(); // to fetch the branch for the updated car so that the branch address will change
@@ -54,6 +65,14 @@ const EditCarModal = ({
     }
 
     setIsButtonClicked(false);
+  }
+
+  function handleUploadImage(e: React.FormEvent<HTMLInputElement>) {
+    e.preventDefault();
+
+    const target = e.target as HTMLInputElement & { files: FileList };
+
+    setCarImage(target.files[0]);
   }
 
   return (
@@ -99,6 +118,11 @@ const EditCarModal = ({
                   if (!isNaN(value)) setPricePerDay(value);
                 }}
               />
+            </div>
+
+            <div className="input-section">
+              <label htmlFor="car-image">Car Image</label>
+              <input type="file" name="car-image" onChange={handleUploadImage} />
             </div>
 
             <div className="input-section">

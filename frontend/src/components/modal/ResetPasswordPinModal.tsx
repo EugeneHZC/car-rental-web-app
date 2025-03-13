@@ -67,7 +67,7 @@ const ResetPasswordPinModal = ({
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <form>
+        <form className="modal-form">
           <div className="form-container">
             <h2>Reset PIN</h2>
             <p>Click on the 'Send PIN' button to send a 6-digit pin to your email.</p>

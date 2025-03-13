@@ -85,6 +85,7 @@ const CarDisplayCard = ({
       )}
 
       <div className="car-infos">
+        {car.Image && <img className="car-image" src={`data:image/png;base64, ${car.Image}`} alt={car.Model} />}
         <h3 className="car-model">{car.Model}</h3>
         <div className="car-info">
           <p className="car-info-title">Colour: </p>
