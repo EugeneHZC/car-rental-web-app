@@ -115,13 +115,17 @@ const Payment = () => {
 
     setIsButtonClicked(true);
 
-    if (rentalId) {
-      const { json: existingPayment } = await getPaymentByRentalId(rentalId);
+    try {
+      if (rentalId) {
+        const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
-      if (existingPayment.length) {
-        setIsButtonClicked(false);
-        return navigate("/");
+        if (existingPayment) {
+          setIsButtonClicked(false);
+          return navigate("/");
+        }
       }
+    } catch (e) {
+      console.log(e);
     }
 
     handleMakeRentAndPayment(null, "Not Paid", "", 0);

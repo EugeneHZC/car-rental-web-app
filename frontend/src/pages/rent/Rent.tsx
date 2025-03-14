@@ -83,6 +83,7 @@ const Rent = () => {
           .slice(0, 16)
           .replace("T", " "),
         totalPrice,
+        rentalId: null,
       },
     });
   }
