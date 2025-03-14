@@ -118,7 +118,7 @@ const Payment = () => {
     if (rentalId) {
       const { json: existingPayment } = await getPaymentByRentalId(rentalId);
 
-      if (existingPayment.length !== 0) {
+      if (existingPayment.length) {
         setIsButtonClicked(false);
         return navigate("/");
       }
