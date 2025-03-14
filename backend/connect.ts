@@ -9,5 +9,4 @@ export const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT ?? "0"),
   database: process.env.DB_NAME,
-  timezone: process.env.DB_TIMEZONE,
 });
