@@ -4,28 +4,32 @@ import { RowDataPacket } from "mysql2";
 
 export async function createStaff(req: Request, res: Response) {
   // Check for staff ID already exists
-  const selectStaffIdQuery = `SELECT * FROM STAFF WHERE StaffID = '${req.body.StaffID}'`;
-  db.query(selectStaffIdQuery, (err, data: RowDataPacket[]) => {
+  const selectStaffIdQuery = "SELECT * FROM STAFF WHERE StaffID = ?";
+
+  db.query(selectStaffIdQuery, [req.body.StaffID], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("Staff ID already used in another account!");
 
     // Check for phone number already exists
-    const selectPhoneNoQuery = `SELECT * FROM STAFF WHERE PhoneNumber = '${req.body.PhoneNumber}'`;
-    db.query(selectPhoneNoQuery, (err, data: RowDataPacket[]) => {
+    const selectPhoneNoQuery = "SELECT * FROM STAFF WHERE PhoneNumber = ?";
+
+    db.query(selectPhoneNoQuery, [req.body.PhoneNumber], (err, data: RowDataPacket[]) => {
       if (err) return res.status(500).json(err);
       if (data.length) return res.status(409).json("Phone number already used in another account!");
 
       // create new staff in database
-      const insertQuery = `INSERT INTO STAFF VALUES (
-        '${req.body.StaffID}',
-        '${req.body.Name}',
-        '${req.body.Gender}',
-        '${req.body.PhoneNumber}',
-        ${req.body.UserID},
-        '${req.body.BranchNo}'
-        )`;
+      const insertQuery = "INSERT INTO STAFF VALUES (?, ?, ?, ?, ?, ?)";
 
-      db.query(insertQuery, (err, _) => {
+      const values = [
+        req.body.StaffID,
+        req.body.Name,
+        req.body.Gender,
+        req.body.PhoneNumber,
+        req.body.UserID,
+        req.body.BranchNo,
+      ];
+
+      db.query(insertQuery, values, (err, _) => {
         if (err) return res.status(500).json(err);
 
         res.status(201).json("Staff created!");
@@ -35,9 +39,9 @@ export async function createStaff(req: Request, res: Response) {
 }
 
 export async function getStaffByUserId(req: Request, res: Response) {
-  const query = `SELECT * FROM STAFF WHERE UserID = ${req.params.userId}`;
+  const query = "SELECT * FROM STAFF WHERE UserID = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
     res.status(200).json(data[0]);
@@ -45,20 +49,17 @@ export async function getStaffByUserId(req: Request, res: Response) {
 }
 
 export async function updateStaffInfo(req: Request, res: Response) {
-  const query = `SELECT * FROM STAFF WHERE UserID = ${req.body.UserID}`;
+  const query = "SELECT * FROM STAFF WHERE UserID = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.body.UserID], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No staff found!");
 
-    const updateQuery = `UPDATE STAFF SET 
-    Name = '${req.body.Name}',
-    PhoneNumber = '${req.body.PhoneNumber}',
-    BranchNo = '${req.body.BranchNo}'
-    WHERE StaffID = '${req.body.StaffID}'
-    `;
+    const updateQuery = "UPDATE STAFF SET Name = ?, PhoneNumber = ?, BranchNo = ? WHERE StaffID = ?";
 
-    db.query(updateQuery, (err, _) => {
+    const values = [req.body.Name, req.body.PhoneNumber, req.body.BranchNo, req.body.StaffID];
+
+    db.query(updateQuery, values, (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("Staff updated successfully!");
@@ -67,15 +68,15 @@ export async function updateStaffInfo(req: Request, res: Response) {
 }
 
 export function deleteStaff(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM STAFF WHERE UserID = ${req.params.userId}`;
+  const selectQuery = "SELECT * FROM STAFF WHERE UserID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No staff found!");
 
-    const deleteQuery = `DELETE FROM STAFF WHERE UserID = ${req.params.userId}`;
+    const deleteQuery = "DELETE FROM STAFF WHERE UserID = ?";
 
-    db.query(deleteQuery, (err, _) => {
+    db.query(deleteQuery, [req.params.userId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("Staff deleted successfully!");

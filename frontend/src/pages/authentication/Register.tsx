@@ -60,10 +60,10 @@ const Register = () => {
           BranchNo: branchNo,
         };
 
-        const { response, json: staffJson } = await createStaff(newStaff);
+        const { response } = await createStaff(newStaff);
 
         if (!response.ok) {
-          alert(staffJson);
+          alert("Oops! Something went wrong.");
           deleteUser(userData.others.UserID);
           setIsButtonClicked(false);
           return;

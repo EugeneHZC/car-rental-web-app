@@ -4,9 +4,9 @@ import { RowDataPacket } from "mysql2";
 import bcrypt, { genSaltSync, hashSync } from "bcryptjs";
 
 export function register(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE email = '${req.body.email}'`;
+  const selectQuery = "SELECT * FROM USER WHERE email = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.body.email], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     // if the email used existed in database, return an error
     if (data.length) return res.status(403).json("Email already in use!");
@@ -16,14 +16,11 @@ export function register(req: Request, res: Response) {
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
     // insert a new user into database
-    const insertQuery = `INSERT INTO USER(Name, Email, Password, Role) VALUES (
-      '${req.body.name}',
-      '${req.body.email}',
-      '${hashedPassword}',
-      '${req.body.role}'
-      )`;
+    const insertQuery = "INSERT INTO USER(Name, Email, Password, Role) VALUES (?, ?, ?, ?)";
 
-    db.query(insertQuery, (err, _) => {
+    const values = [req.body.name, req.body.email, hashedPassword, req.body.role];
+
+    db.query(insertQuery, values, (err, _) => {
       if (err) return res.status(500).json(err);
       return res.status(201).json("User created successfully!");
     });
@@ -31,9 +28,9 @@ export function register(req: Request, res: Response) {
 }
 
 export function login(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE Email = '${req.body.email}'`;
+  const selectQuery = "SELECT * FROM USER WHERE Email = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.body.email], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length == 0) return res.status(404).json("Incorrect email!");
 
@@ -52,15 +49,15 @@ export function login(req: Request, res: Response) {
 }
 
 export function updateUserInfo(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
+  const selectQuery = "SELECT * FROM USER WHERE UserID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No user found!");
 
-    const updateQuery = `UPDATE USER SET Name = '${req.body.name}', Email = '${req.body.email}' WHERE UserID = ${req.params.userId}`;
+    const updateQuery = "UPDATE USER SET Name = ?, Email = ? WHERE UserID = ?";
 
-    db.query(updateQuery, (err, _) => {
+    db.query(updateQuery, [req.body.name, req.body.email, req.params.userId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("User info updated successfully!");
@@ -69,9 +66,9 @@ export function updateUserInfo(req: Request, res: Response) {
 }
 
 export function updateUserPassword(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
+  const selectQuery = "SELECT * FROM USER WHERE UserID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No user found!");
 
@@ -81,9 +78,9 @@ export function updateUserPassword(req: Request, res: Response) {
     const salt = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS ?? "0"));
     const hashedPassword = bcrypt.hashSync(req.body.newPassword, salt);
 
-    const updateQuery = `UPDATE USER SET Password = '${hashedPassword}' WHERE UserID = ${req.params.userId}`;
+    const updateQuery = "UPDATE USER SET Password = ? WHERE UserID = ?";
 
-    db.query(updateQuery, (err, _) => {
+    db.query(updateQuery, [hashedPassword, req.params.userId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("User password updated successfully!");
@@ -92,17 +89,18 @@ export function updateUserPassword(req: Request, res: Response) {
 }
 
 export function updateUserForgottenPassword(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE Email = '${req.body.email}'`;
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  const selectQuery = "SELECT * FROM USER WHERE Email = ?";
+
+  db.query(selectQuery, [req.body.email], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No user found!");
 
     const salt = genSaltSync(parseInt(process.env.SALT_ROUNDS ?? "0"));
     const hashedPassword = hashSync(req.body.newPassword, salt);
 
-    const updateQuery = `UPDATE USER SET Password = '${hashedPassword}' WHERE Email = '${req.body.email}'`;
+    const updateQuery = "UPDATE USER SET Password = ? WHERE Email = ?";
 
-    db.query(updateQuery, (err, _) => {
+    db.query(updateQuery, [hashedPassword, req.body.email], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("Password updated!");
@@ -111,15 +109,15 @@ export function updateUserForgottenPassword(req: Request, res: Response) {
 }
 
 export function deleteUser(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
+  const selectQuery = "SELECT * FROM USER WHERE UserID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No user found!");
 
-    const deleteQuery = `DELETE FROM USER WHERE UserID = ${req.params.userId}`;
+    const deleteQuery = "DELETE FROM USER WHERE UserID = ?";
 
-    db.query(deleteQuery, (err, _) => {
+    db.query(deleteQuery, [req.params.userId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("User deleted successfully!");
@@ -128,9 +126,9 @@ export function deleteUser(req: Request, res: Response) {
 }
 
 export function getUserByUserId(req: Request, res: Response) {
-  const query = `SELECT * FROM USER WHERE UserID = ${req.params.userId}`;
+  const query = "SELECT * FROM USER WHERE UserID = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.userId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("No user found!");
 

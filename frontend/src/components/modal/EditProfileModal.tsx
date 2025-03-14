@@ -126,32 +126,36 @@ const EditProfileModal = ({
               <input type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
 
-            <div className="input-section">
-              <label htmlFor="phone-number">Phone Number</label>
-              <input
-                type="text"
-                name="phone-number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
-            </div>
+            {(customer || staff) && (
+              <>
+                <div className="input-section">
+                  <label htmlFor="phone-number">Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone-number"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                </div>
 
-            {user?.Role === "Customer" ? (
-              <div className="input-section">
-                <label htmlFor="address">Address</label>
-                <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} />
-              </div>
-            ) : (
-              <div className="input-section">
-                <label htmlFor="branch-address">Address</label>
-                <select name="branch-address" value={address} onChange={(e) => setAddress(e.target.value)}>
-                  {branches.map((branch) => (
-                    <option value={branch.Address} key={branch.BranchNo}>
-                      {branch.Address}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                {user?.Role === "Customer" ? (
+                  <div className="input-section">
+                    <label htmlFor="address">Address</label>
+                    <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                  </div>
+                ) : (
+                  <div className="input-section">
+                    <label htmlFor="branch-address">{user?.Role === "Customer" ? "Address" : "Branch Address"}</label>
+                    <select name="branch-address" value={address} onChange={(e) => setAddress(e.target.value)}>
+                      {branches.map((branch) => (
+                        <option value={branch.Address} key={branch.BranchNo}>
+                          {branch.Address}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </>
             )}
 
             <div className="buttons">

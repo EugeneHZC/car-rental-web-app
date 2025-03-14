@@ -52,7 +52,10 @@ const EditCarModal = ({
 
       const { response: imageResponse } = await uploadCarImage(car.CarPlateNo, formData);
 
-      if (!imageResponse.ok) return alert("Oops! Something went wrong while trying to upload your image.");
+      if (!imageResponse.ok) {
+        setIsButtonClicked(false);
+        return alert("Oops! Something went wrong while trying to upload your image.");
+      }
     }
 
     if (carResponse.ok) {

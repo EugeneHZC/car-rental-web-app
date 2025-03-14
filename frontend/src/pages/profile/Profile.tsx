@@ -11,10 +11,8 @@ import ChangePasswordModal from "../../components/modal/ChangePasswordModal";
 import { useStaffContext } from "../../hooks/useStaffContext";
 import { getBranchByBranchNo } from "../../api/branch";
 import ConfirmationModal from "../../components/modal/ConfirmationModal";
-// import { deleteCustomer } from "../../api/customer";
 import { deleteUser } from "../../api/auth";
 import { getAllCars } from "../../api/car";
-// import { deleteStaff } from "../../api/staff";
 
 const SMALL_SCREEN_SIZE = 700;
 
@@ -63,7 +61,7 @@ const Profile = () => {
     try {
       if (user?.Role === "Customer") {
         // get rentals for customer based on nric
-        if (!customer) return;
+        if (!customer) return setIsLoading(false);
 
         const { response, json } = await getRentalsByNRIC(customer.NRIC);
         if (response.ok && json.length) setRentals(json);
@@ -153,32 +151,38 @@ const Profile = () => {
             <h4>Email</h4>
             <p>{user?.Email}</p>
           </div>
-          <div className="profile-detail">
-            <h4>Phone Number</h4>
-            <p>{user?.Role === "Customer" ? customer?.PhoneNumber : staff?.PhoneNumber}</p>
-          </div>
-          {user?.Role === "Customer" ? (
+
+          {(customer || staff) && (
             <>
               <div className="profile-detail">
-                <h4>NRIC</h4>
-                <p>{customer?.NRIC}</p>
-              </div>
-              <div className="profile-detail">
-                <h4>Address</h4>
-                <p>{customer?.Address}</p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="profile-detail">
-                <h4>Staff ID</h4>
-                <p>{staff?.StaffID}</p>
+                <h4>Phone Number</h4>
+                <p>{user?.Role === "Customer" ? customer?.PhoneNumber : staff?.PhoneNumber}</p>
               </div>
 
-              <div className="profile-detail">
-                <h4>Branch Address</h4>
-                <p>{branch?.Address}</p>
-              </div>
+              {user?.Role === "Customer" ? (
+                <>
+                  <div className="profile-detail">
+                    <h4>NRIC</h4>
+                    <p>{customer?.NRIC}</p>
+                  </div>
+                  <div className="profile-detail">
+                    <h4>Address</h4>
+                    <p>{customer?.Address}</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="profile-detail">
+                    <h4>Staff ID</h4>
+                    <p>{staff?.StaffID}</p>
+                  </div>
+
+                  <div className="profile-detail">
+                    <h4>Branch Address</h4>
+                    <p>{branch?.Address}</p>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

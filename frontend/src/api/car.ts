@@ -7,13 +7,6 @@ export async function getAllCars() {
   return { response, json };
 }
 
-export async function getCarByCarPlate(carPlateNo: string) {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${carPlateNo}`);
-  const json = await response.json();
-
-  return { response, json };
-}
-
 export async function addCar(car: Car) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/add`, {
     method: "POST",

@@ -54,6 +54,8 @@ const Payment = () => {
       );
 
       if (rentalResponse.ok && paymentResponse.ok) {
+        if (amountPaid >= totalPrice) alert("Payment successful!");
+        else alert("Rent made!");
         navigate("/");
       }
 
@@ -68,9 +70,7 @@ const Payment = () => {
 
     setIsButtonClicked(true);
 
-    if (!customer) {
-      return setIsButtonClicked(false);
-    }
+    if (!customer) return setIsButtonClicked(false);
 
     if (amountPaid < totalPrice) {
       setIsButtonClicked(false);
@@ -99,7 +99,7 @@ const Payment = () => {
           if (paymentResponse.ok && rentalResponse.ok) {
             alert("Payment successful!");
             setIsButtonClicked(false);
-            return navigate("/profile");
+            return navigate("/");
           }
         }
       }
@@ -120,11 +120,11 @@ const Payment = () => {
 
       if (existingPayment.length !== 0) {
         setIsButtonClicked(false);
-        return navigate("/profile");
+        return navigate("/");
       }
     }
 
-    handleMakeRentAndPayment("", "Not Paid", "", 0);
+    handleMakeRentAndPayment(null, "Not Paid", "", 0);
     setIsButtonClicked(false);
   }
 

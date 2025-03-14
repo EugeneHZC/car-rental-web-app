@@ -3,6 +3,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { useCustomerContext } from "../hooks/useCustomerContext";
 import { createCustomer } from "../api/customer";
+import { Customer } from "../types";
 
 const CustomerRegistration = () => {
   const { user } = useAuthContext();
@@ -26,16 +27,18 @@ const CustomerRegistration = () => {
 
     setIsButtonClicked(true);
 
+    const newCustomer: Customer = {
+      Name: name,
+      Gender: gender,
+      NRIC: nric,
+      PhoneNumber: phoneNumber,
+      LicenseNumber: licenseNumber,
+      Address: address,
+      UserID: user.UserID,
+    };
+
     try {
-      const { response, json } = await createCustomer(
-        name,
-        gender,
-        nric,
-        phoneNumber,
-        licenseNumber,
-        address,
-        user?.UserID
-      );
+      const { response, json } = await createCustomer(newCustomer);
 
       if (response.ok) {
         alert(json);
@@ -45,17 +48,7 @@ const CustomerRegistration = () => {
         setLicenseNumber(0);
         setAddress("");
 
-        dispatch({
-          payload: {
-            NRIC: nric,
-            Name: name ?? "",
-            Gender: gender,
-            PhoneNumber: phoneNumber,
-            LicenseNumber: licenseNumber,
-            Address: address,
-            UserID: user?.UserID ?? null,
-          },
-        });
+        dispatch({ payload: newCustomer });
 
         navigate("/profile");
       } else {

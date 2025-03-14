@@ -3,17 +3,20 @@ import { db } from "../connect";
 import { RowDataPacket } from "mysql2";
 
 export function createRental(req: Request, res: Response) {
-  const query = `INSERT INTO RENTAL(RentalDate, PickUpTime, DropOffTime, TotalPrice, PaymentStatus, CarPlateNo, NRIC) VALUES (
-    '${req.body.rentalDate}',
-    '${req.body.pickUpTime}',
-    '${req.body.dropOffTime}',
-    ${req.body.totalPrice},
-    '${req.body.paymentStatus}',
-    '${req.body.carPlateNo}',
-    '${req.body.nric}'
-    )`;
+  const query =
+    "INSERT INTO RENTAL(RentalDate, PickUpTime, DropOffTime, TotalPrice, PaymentStatus, CarPlateNo, NRIC) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-  db.query(query, (err, _) => {
+  const values = [
+    req.body.RentalDate,
+    req.body.PickUpTime,
+    req.body.DropOffTime,
+    req.body.TotalPrice,
+    req.body.PaymentStatus,
+    req.body.CarPlateNo,
+    req.body.NRIC,
+  ];
+
+  db.query(query, values, (err, _) => {
     if (err) return res.status(500).json(err);
 
     res.status(201).json("Rental created successfully!");
@@ -31,9 +34,9 @@ export function getAllRentals(req: Request, res: Response) {
 }
 
 export function getRentalsByNRIC(req: Request, res: Response) {
-  const query = `SELECT * FROM RENTAL WHERE NRIC = '${req.params.nric}'`;
+  const query = "SELECT * FROM RENTAL WHERE NRIC = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.nric], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
     res.status(200).json(data);
@@ -53,9 +56,9 @@ export function getRentalsByBranchNo(req: Request, res: Response) {
 }
 
 export function getRentalByNRICAndCarPlate(req: Request, res: Response) {
-  const query = `SELECT * FROM RENTAL WHERE NRIC = '${req.params.nric}' AND CarPlateNo = '${req.params.carPlateNo}'`;
+  const query = "SELECT * FROM RENTAL WHERE NRIC = ? AND CarPlateNo = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.nric, req.params.carPlateNo], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
     res.status(200).json(data);
@@ -63,9 +66,9 @@ export function getRentalByNRICAndCarPlate(req: Request, res: Response) {
 }
 
 export function getRentalsByCarPlate(req: Request, res: Response) {
-  const query = `SELECT * FROM RENTAL WHERE CarPlateNo = '${req.params.carPlateNo}'`;
+  const query = "SELECT * FROM RENTAL WHERE CarPlateNo = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.carPlateNo], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
     res.status(200).json(data);
@@ -73,9 +76,9 @@ export function getRentalsByCarPlate(req: Request, res: Response) {
 }
 
 export function getRentalById(req: Request, res: Response) {
-  const query = `SELECT * FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+  const query = "SELECT * FROM RENTAL WHERE RentalID = ?";
 
-  db.query(query, (err, data: RowDataPacket[]) => {
+  db.query(query, [req.params.rentalId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
 
     res.status(200).json(data);
@@ -83,16 +86,15 @@ export function getRentalById(req: Request, res: Response) {
 }
 
 export function updateRentalPaymentStatus(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+  const selectQuery = "SELECT * FROM RENTAL WHERE RentalID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.rentalId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("Rental not found!");
 
-    const updateQuery = `UPDATE RENTAL SET PaymentStatus = '${req.body.paymentStatus}'
-    WHERE RentalID = ${req.params.rentalId}`;
+    const updateQuery = "UPDATE RENTAL SET PaymentStatus = ? WHERE RentalID = ?";
 
-    db.query(updateQuery, (err, _) => {
+    db.query(updateQuery, [req.body.paymentStatus, req.params.rentalId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("Rental updated successfully!");
@@ -101,15 +103,15 @@ export function updateRentalPaymentStatus(req: Request, res: Response) {
 }
 
 export function deleteRentalById(req: Request, res: Response) {
-  const selectQuery = `SELECT * FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+  const selectQuery = "SELECT * FROM RENTAL WHERE RentalID = ?";
 
-  db.query(selectQuery, (err, data: RowDataPacket[]) => {
+  db.query(selectQuery, [req.params.rentalId], (err, data: RowDataPacket[]) => {
     if (err) return res.status(500).json(err);
     if (data.length === 0) return res.status(404).json("Rental not found!");
 
-    const deleteQuery = `DELETE FROM RENTAL WHERE RentalID = ${req.params.rentalId}`;
+    const deleteQuery = "DELETE FROM RENTAL WHERE RentalID = ?";
 
-    db.query(deleteQuery, (err, _) => {
+    db.query(deleteQuery, [req.params.rentalId], (err, _) => {
       if (err) return res.status(500).json(err);
 
       res.status(200).json("Rental deleted successfully!");

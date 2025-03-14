@@ -1,20 +1,12 @@
 import { Customer } from "../types";
 
-export async function createCustomer(
-  name: string,
-  gender: string,
-  nric: string,
-  phoneNumber: string,
-  licenseNumber: number,
-  address: string,
-  userId: number
-) {
+export async function createCustomer(customer: Customer) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/customers/create`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name, gender, nric, phoneNumber, licenseNumber, address, userId }),
+    body: JSON.stringify(customer),
   });
 
   const json = await response.json();

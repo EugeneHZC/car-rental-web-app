@@ -21,31 +21,33 @@ const ConfirmationModal = ({
   return (
     <div className="modal-container">
       <div className="modal-content">
-        <h2>Are you sure?</h2>
-        <p>{content}</p>
+        <div className="confirmation-modal">
+          <h2>Are you sure?</h2>
+          <p>{content}</p>
 
-        <div className="buttons">
-          <button
-            className={isButtonClicked ? "btn-disabled" : "btn-danger"}
-            disabled={isButtonClicked}
-            type="button"
-            onClick={() => {
-              setIsButtonClicked(true);
-              handleCallback();
-              closeModal();
-              setIsButtonClicked(false);
-            }}
-          >
-            {dangerButtonText}
-          </button>
-          <button
-            className={isButtonClicked ? "btn-disabled" : "btn-gray"}
-            disabled={isButtonClicked}
-            type="button"
-            onClick={closeModal}
-          >
-            Back
-          </button>
+          <div className="buttons">
+            <button
+              className={isButtonClicked ? "btn-disabled" : "btn-danger"}
+              disabled={isButtonClicked}
+              type="button"
+              onClick={() => {
+                setIsButtonClicked(true);
+                handleCallback();
+                closeModal();
+                setIsButtonClicked(false);
+              }}
+            >
+              {dangerButtonText}
+            </button>
+            <button
+              className={isButtonClicked ? "btn-disabled" : "btn-gray"}
+              disabled={isButtonClicked}
+              type="button"
+              onClick={closeModal}
+            >
+              Back
+            </button>
+          </div>
         </div>
       </div>
     </div>

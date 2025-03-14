@@ -33,7 +33,7 @@ fieldset {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   height: fit-content;
   width: 80%;
-  max-width: 500px;
+  max-width: 400px;
 }
 
 legend {
@@ -61,7 +61,6 @@ select {
   transition: border 0.3s ease-in-out;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 400;
-  display: flex;
 }
 
 input::-webkit-outer-spin-button,
@@ -73,6 +72,7 @@ input::-webkit-inner-spin-button {
 input[type="file"],
 input[type="file"]:focus {
   border: none;
+  padding: 5px 0;
 }
 
 textarea {
@@ -92,11 +92,19 @@ select:focus {
 }
 
 .input-section {
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 30px;
   align-items: center;
-  min-height: 50px;
+  min-height: 50px; */
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 5px;
+}
+
+.input-section label {
+  padding: 0 5px;
 }
 
 @media screen and (max-width: 600px) {

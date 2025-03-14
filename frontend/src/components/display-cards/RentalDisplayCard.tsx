@@ -125,7 +125,7 @@ const RentalDisplayCard = ({
       const { response: rentalResponse } = await deleteRentalById(rental.RentalID);
 
       if (!rentalResponse.ok) return alert("Oops! Something went wrong.");
-      alert("Rental removed successfully!");
+      alert("Rental cancelled!");
 
       if (user?.Role !== "Staff") return fetchCallback();
 

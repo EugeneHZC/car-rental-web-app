@@ -51,3 +51,11 @@
   height: 200px;
   margin: 0 auto;
 }
+
+@media screen and (max-width: 600px) {
+  .car-image {
+    width: auto;
+    height: 150px;
+    margin: 0 auto;
+  }
+}

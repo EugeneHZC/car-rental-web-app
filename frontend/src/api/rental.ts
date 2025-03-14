@@ -6,15 +6,7 @@ export async function createRental(rental: Rental) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      rentalDate: rental.RentalDate,
-      pickUpTime: rental.PickUpTime,
-      dropOffTime: rental.DropOffTime,
-      totalPrice: rental.TotalPrice,
-      paymentStatus: rental.PaymentStatus,
-      carPlateNo: rental.CarPlateNo,
-      nric: rental.NRIC,
-    }),
+    body: JSON.stringify(rental),
   });
 
   const json = await response.json();

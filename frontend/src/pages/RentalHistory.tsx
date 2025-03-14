@@ -24,7 +24,8 @@ const RentalHistory = () => {
     setIsLoading(true);
 
     if (user?.Role === "Customer") {
-      if (!customer) return;
+      if (!customer) return setIsLoading(false);
+
       const { response, json } = await getRentalsByNRIC(customer.NRIC);
 
       if (response.ok && json.length) setRentals(json);

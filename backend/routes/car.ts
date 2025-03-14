@@ -1,12 +1,5 @@
 import { Router } from "express";
-import {
-  createCar,
-  getAllCars,
-  getCarByCarPlateNo,
-  deleteCar,
-  updateCar,
-  uploadCarImage,
-} from "../controllers/carController";
+import { createCar, getAllCars, deleteCar, updateCar, uploadCarImage } from "../controllers/carController";
 import multer from "multer";
 
 const carRouter = Router();
@@ -17,7 +10,6 @@ const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 // Main router "/api/cars"
 
 carRouter.get("/", getAllCars);
-carRouter.get("/:carPlateNo", getCarByCarPlateNo);
 
 carRouter.post("/add", createCar);
 
