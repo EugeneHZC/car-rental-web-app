@@ -35,34 +35,13 @@ const RentalDisplayCard = ({
 
   const navigate = useNavigate();
 
-  const formattedRentalDate = new Date(
-    new Date(rental.RentalDate).getTime() - new Date(rental.RentalDate).getTimezoneOffset() * 60000
-  )
-    .toISOString()
-    .replace("T", " ")
-    .slice(0, 16);
+  const formattedRentalDate = rental.RentalDate.replace("T", " ").slice(0, 19);
 
-  const formattedPickUpTime = new Date(
-    new Date(rental.PickUpTime).getTime() - new Date(rental.PickUpTime).getTimezoneOffset() * 60000
-  )
-    .toISOString()
-    .replace("T", " ")
-    .slice(0, 16);
+  const formattedPickUpTime = rental.PickUpTime.replace("T", " ").slice(0, 16);
 
-  const formattedDropOffTime = new Date(
-    new Date(rental.DropOffTime).getTime() - new Date(rental.DropOffTime).getTimezoneOffset() * 60000
-  )
-    .toISOString()
-    .replace("T", " ")
-    .slice(0, 16);
+  const formattedDropOffTime = rental.DropOffTime.replace("T", " ").slice(0, 16);
 
-  const formattedPaymentDate =
-    payment?.PaymentDate == null
-      ? ""
-      : new Date(new Date(payment.PaymentDate).getTime() - new Date(payment.PaymentDate).getTimezoneOffset() * 60000)
-          .toISOString()
-          .replace("T", " ")
-          .slice(0, 19);
+  const formattedPaymentDate = payment === null ? "" : payment.PaymentDate?.replace("T", " ").slice(0, 19);
 
   function handleClick() {
     navigate("/payment", {
