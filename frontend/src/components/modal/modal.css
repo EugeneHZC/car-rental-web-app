@@ -49,13 +49,14 @@
 
 .recover-pin-input input {
   grid-column: span 1;
+  width: 100%;
 }
 
 .recover-pin-input button {
   border-radius: 10px;
   font-size: 16px;
-  width: fit-content;
   max-width: 120px;
+  width: 100%;
   height: fit-content;
   margin-left: auto;
 }
